@@ -91,7 +91,7 @@
                                         <div class="form-group form-md-line-input form-md-floating-label">
                                             <label>性别<span class="required">  </span></label>
                                             <select name="gender" class="form-control">
-                                                <option value="0">未知</option>
+                                                <option value="-1">未知</option>
                                                 <option value="1">男</option>
                                                 <option value="2">女</option>
                                             </select>

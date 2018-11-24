@@ -21,7 +21,7 @@ var buildingJson = '';
             /*{display: '编号', name: 'id', width: 50},*/
             {display: '测温点编号', name: 'positionID', width: 80},
             {
-                display: '设备编号', name: 'deviceSN', width: 80, render: function (rowData) {
+                display: '设备编号', name: 'deviceSN', width: 100, render: function (rowData) {
                     return "<a class='custom-a-style' href='javascript:void(0);' alt='点击查看信号强度' onclick='showLevel(" + rowData.deviceID + ",\"" + rowData.deviceSN + "\")'>" + rowData.deviceSN + "</a>";
                 }
             },

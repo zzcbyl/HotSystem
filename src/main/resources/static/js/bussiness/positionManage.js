@@ -619,11 +619,11 @@ function bindRoomName() {
 function showTemp(positonID) {
     $("#templGrid").ligerGrid({
         columns: [
-            {display: '室内温度', name: 'temp1', width: 80},
+            {display: '室内温度', name: 'temp1', width: 200},
             /*{display: '设备温度', name: 'temp2', width: 80},*/
             //{display: '信号强度', name: 'level', width: 80},
             {
-                display: '采集时间', name: 'addTime', width: 200, render: function (rowData) {
+                display: '采集时间', name: 'addTime', width: 270, render: function (rowData) {
                     return rowData.addTime == null ? "" : new Date(rowData.addTime).format('Y-m-d H:i:s');
                 }
             }

@@ -245,7 +245,7 @@
 
                     <div class="modal fade" id="TempModal" tabindex="-1" role="dialog" aria-labelledby="测温点温度列表"
                          data-backdrop="static">
-                        <div class="modal-dialog" style="width:800px;">
+                        <div class="modal-dialog" style="width:560px; height: 750px;">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
