@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastrun.TempCollection.dal.ControlrecordMapper">
+
+    <resultMap type="com.fastrun.TempCollection.model.Controlrecord" id="controlrecordMap">
+                  <id column="id" property="id" />
+         <result column="DeviceID" property="deviceID" />
+         <result column="ControlID" property="controlID" />
+         <result column="RemoteCode" property="remoteCode" />
+         <result column="Note" property="note" />
+         <result column="SendTime" property="sendTime" />
+         <result column="ReturnStatus" property="returnStatus" />
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+      `id`,`DeviceID`,`ControlID`,`RemoteCode`,`Note`,`SendTime`,`ReturnStatus`
+    </sql>
+  
+    <select id="getPaging" resultType="com.fastrun.TempCollection.model.Controlrecord" resultMap="controlrecordMap">
+       SELECT
+        <include refid="Base_Column_List" />
+       FROM ControlRecord
+       order by ${orderBy} limit #{offset},#{pageSize}
+    </select>
+
+    <select id="get" resultType="com.fastrun.TempCollection.model.Controlrecord" resultMap="controlrecordMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM ControlRecord WHERE id=#{id}
+    </select>
+
+    <update id="update" parameterType="com.fastrun.TempCollection.model.Controlrecord"
+            flushCache="true"
+            statementType="PREPARED"
+            timeout="20">
+       Update ControlRecord
+        <set>
+                   <if test="model.deviceID!=null">
+                           `DeviceID`=#{model.deviceID},
+                       </if>
+        <if test="model.controlID!=null">
+                           `ControlID`=#{model.controlID},
+                       </if>
+        <if test="model.remoteCode!=null">
+                           `RemoteCode`=#{model.remoteCode},
+                       </if>
+        <if test="model.note!=null">
+                           `Note`=#{model.note},
+                       </if>
+        <if test="model.sendTime!=null">
+                           `SendTime`=#{model.sendTime},
+                       </if>
+        <if test="model.returnStatus!=null">
+                           `ReturnStatus`=#{model.returnStatus},
+                       </if>  
+        </set>
+        WHERE id=#{model.id}
+    </update>
+
+    <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
+            timeout="20">
+        update ControlRecord set state=-1 WHERE id=#{id}
+    </update>
+
+    <insert id="insert" parameterType="com.fastrun.TempCollection.model.Controlrecord"
+            flushCache="true"
+            statementType="PREPARED"
+            keyProperty="id"
+            keyColumn=""
+            useGeneratedKeys="true"
+            timeout="20">
+        INSERT INTO ControlRecord(`DeviceID`,`ControlID`,`RemoteCode`,`Note`,`SendTime`,`ReturnStatus`) VALUES(#{model.deviceID},#{model.controlID},#{model.remoteCode},#{model.note},#{model.sendTime},#{model.returnStatus})
+    </insert>
+
+
+    <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*) FROM ControlRecord
+        <!--where>
+            <if test="realName!=null and realName!=''">
+                 realName like concat('%',#{realName},'%')
+            </if>
+            and state!=-1
+        </where-->
+    </select>
+</mapper>

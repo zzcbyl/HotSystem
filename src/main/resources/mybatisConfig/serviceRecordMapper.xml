@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastrun.TempCollection.dal.ServiceRecordMapper">
+
+    <resultMap type="com.fastrun.TempCollection.model.ServiceRecord" id="serviceRecordMap">
+                  <id column="id" property="id" />
+         <result column="serviceTaskID" property="serviceTaskID" />
+         <result column="from" property="from" />
+         <result column="to" property="to" />
+         <result column="taskTime" property="taskTime" />
+         <result column="state" property="state" />
+         <result column="userID" property="userID" />
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+      `id`,`serviceTaskID`,`from`,`to`,`taskTime`,`state`,`userID`
+    </sql>
+  
+    <select id="getPaging" resultType="com.fastrun.TempCollection.model.ServiceRecord" resultMap="serviceRecordMap">
+       SELECT
+        <include refid="Base_Column_List" />
+       FROM service_record
+       order by ${orderBy} limit #{offset},#{pageSize}
+    </select>
+
+    <select id="get" resultType="com.fastrun.TempCollection.model.ServiceRecord" resultMap="serviceRecordMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM service_record WHERE id=#{id}
+    </select>
+
+    <update id="update" parameterType="com.fastrun.TempCollection.model.ServiceRecord"
+            flushCache="true"
+            statementType="PREPARED"
+            timeout="20">
+       Update service_record
+        <set>
+                   <if test="model.serviceTaskID!=null">
+                           `serviceTaskID`=#{model.serviceTaskID},
+                       </if>
+        <if test="model.from!=null">
+                           `from`=#{model.from},
+                       </if>
+        <if test="model.to!=null">
+                           `to`=#{model.to},
+                       </if>
+        <if test="model.taskTime!=null">
+                           `taskTime`=#{model.taskTime},
+                       </if>
+        <if test="model.state!=null">
+                           `state`=#{model.state},
+                       </if>
+        <if test="model.userID!=null">
+                           `userID`=#{model.userID},
+                       </if>  
+        </set>
+        WHERE id=#{model.id}
+    </update>
+
+    <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
+            timeout="20">
+        update service_record set state=-1 WHERE id=#{id}
+    </update>
+
+    <insert id="insert" parameterType="com.fastrun.TempCollection.model.ServiceRecord"
+            flushCache="true"
+            statementType="PREPARED"
+            keyProperty="id"
+            keyColumn=""
+            useGeneratedKeys="true"
+            timeout="20">
+        INSERT INTO service_record(`serviceTaskID`,`from`,`to`,`taskTime`,`state`,`userID`) VALUES(#{model.serviceTaskID},#{model.from},#{model.to},#{model.taskTime},#{model.state},#{model.userID})
+    </insert>
+
+
+    <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*) FROM service_record
+        <!--where>
+            <if test="realName!=null and realName!=''">
+                 realName like concat('%',#{realName},'%')
+            </if>
+            and state!=-1
+        </where-->
+    </select>
+</mapper>

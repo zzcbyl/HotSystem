@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastrun.TempCollection.dal.CommunityMapper">
+
+    <resultMap type="com.fastrun.TempCollection.model.Community" id="communityMap">
+        <id column="id" property="id"/>
+        <result column="Name" property="name"/>
+        <result column="StationID" property="stationID"/>
+        <result column="Status" property="status"/>
+        <result column="CreateTime" property="createTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+      `id`,`Name`,`StationID`,`Status`,`CreateTime`
+    </sql>
+
+    <select id="getPaging" resultType="com.fastrun.TempCollection.model.Community" resultMap="communityMap">
+        SELECT
+        com.`id`,com.`Name`,com.`StationID`,com.`Status`,com.`CreateTime`,hes.`Name` AS stationName
+        FROM Community com LEFT JOIN heatexchangestation hes ON com.`StationID`=hes.`id` WHERE com.`Status`!=3
+        <if test="name!=''">
+            and com.`Name` LIKE '%${name}%'
+        </if>
+        <if test="stationID!=-1">
+            and com.stationID=#{stationID}
+        </if>
+        order by ${orderBy} limit #{offset},#{pageSize}
+    </select>
+
+    <select id="get" resultType="com.fastrun.TempCollection.model.Community" resultMap="communityMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM Community WHERE id=#{id}
+    </select>
+
+    <update id="update" parameterType="com.fastrun.TempCollection.model.Community"
+            flushCache="true"
+            statementType="PREPARED"
+            timeout="20">
+        Update Community
+        <set>
+            <if test="model.name!=null">
+                `Name`=#{model.name},
+            </if>
+            <if test="model.stationID!=null">
+                `StationID`=#{model.stationID},
+            </if>
+            <if test="model.status!=null">
+                `Status`=#{model.status},
+            </if>
+            <if test="model.createTime!=null">
+                `CreateTime`=#{model.createTime},
+            </if>
+        </set>
+        WHERE id=#{model.id}
+    </update>
+
+    <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
+            timeout="20">
+        update Community set status=3 WHERE id=#{id}
+    </update>
+
+    <insert id="insert" parameterType="com.fastrun.TempCollection.model.Community"
+            flushCache="true"
+            statementType="PREPARED"
+            keyProperty="id"
+            keyColumn=""
+            useGeneratedKeys="true"
+            timeout="20">
+        INSERT INTO Community(`Name`,`StationID`,`Status`,`CreateTime`) VALUES(#{model.name},#{model.stationID},#{model.status},#{model.createTime})
+    </insert>
+
+
+    <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*) FROM Community WHERE `Status`!=3
+        <if test="name!=''">
+            and `Name` LIKE '%${name}%'
+        </if>
+        <if test="stationID!=-1">
+            and stationID=#{stationID}
+        </if>
+    </select>
+</mapper>

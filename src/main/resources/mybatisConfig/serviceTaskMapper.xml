@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastrun.TempCollection.dal.ServiceTaskMapper">
+
+    <resultMap type="com.fastrun.TempCollection.model.ServiceTask" id="serviceTaskMap">
+         <id column="id" property="id" />
+         <result column="userID" property="userID" />
+         <result column="CustomerMobile" property="customerMobile" />
+         <result column="startTime" property="startTime" />
+         <result column="endTime" property="endTime" />
+         <result column="frequency" property="frequency" />
+         <result column="state" property="state" />
+         <result column="createTime" property="createTime" />
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+      `id`,`userID`,`CustomerMobile`,`startTime`,`endTime`,`frequency`,`state`,`createTime`
+    </sql>
+  
+    <select id="getPaging" resultType="com.fastrun.TempCollection.model.ServiceTask" resultMap="serviceTaskMap">
+       SELECT
+        <include refid="Base_Column_List" />
+       FROM service_task
+        <where>
+            <if test="userId!=0">
+                userID=#{userId}
+            </if>
+        </where>
+       order by ${orderBy} limit #{offset},#{pageSize}
+    </select>
+
+    <select id="get" resultType="com.fastrun.TempCollection.model.ServiceTask" resultMap="serviceTaskMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM service_task WHERE id=#{id}
+    </select>
+
+    <update id="update" parameterType="com.fastrun.TempCollection.model.ServiceTask"
+            flushCache="true"
+            statementType="PREPARED"
+            timeout="20">
+       Update service_task
+        <set>
+                   <if test="model.userID!=null">
+                           `userID`=#{model.userID},
+                       </if>
+        <if test="model.customerMobile!=null">
+                           `CustomerMobile`=#{model.customerMobile},
+                       </if>
+        <if test="model.startTime!=null">
+                           `startTime`=#{model.startTime},
+                       </if>
+        <if test="model.endTime!=null">
+                           `endTime`=#{model.endTime},
+                       </if>
+        <if test="model.frequency!=null">
+                           `frequency`=#{model.frequency},
+                       </if>
+        <if test="model.state!=null">
+                           `state`=#{model.state},
+                       </if>
+        <if test="model.createTime!=null">
+                           `createTime`=#{model.createTime},
+                       </if>  
+        </set>
+        WHERE id=#{model.id}
+    </update>
+
+    <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
+            timeout="20">
+        update service_task set state=-1 WHERE id=#{id}
+    </update>
+
+    <insert id="insert" parameterType="com.fastrun.TempCollection.model.ServiceTask"
+            flushCache="true"
+            statementType="PREPARED"
+            keyProperty="id"
+            keyColumn=""
+            useGeneratedKeys="true"
+            timeout="20">
+        INSERT INTO service_task(`userID`,`CustomerMobile`,`startTime`,`endTime`,`frequency`,`state`,`createTime`) VALUES(#{model.userID},#{model.customerMobile},#{model.startTime},#{model.endTime},#{model.frequency},#{model.state},#{model.createTime})
+    </insert>
+
+
+    <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*) FROM service_task
+        <where>
+            <if test="userId!=0">
+                userID=#{userId}
+            </if>
+        </where>
+        <!--where>
+            <if test="realName!=null and realName!=''">
+                 realName like concat('%',#{realName},'%')
+            </if>
+            and state!=-1
+        </where-->
+    </select>
+</mapper>

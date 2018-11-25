@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastrun.TempCollection.dal.RoomMapper">
+
+    <resultMap type="com.fastrun.TempCollection.model.Room" id="roomMap">
+                  <id column="id" property="id" />
+         <result column="CustomerID" property="customerID" />
+         <result column="Lati" property="lati" />
+         <result column="longi" property="longi" />
+         <result column="Height" property="height" />
+         <result column="CommunityID" property="communityID" />
+         <result column="BuildingID" property="buildingID" />
+         <result column="SubNumber" property="subNumber" />
+         <result column="FloorNumber" property="floorNumber" />
+         <result column="ApartNumber" property="apartNumber" />
+         <result column="RoomName" property="roomName" />
+         <result column="SideRoom" property="sideRoom" />
+         <result column="RoomArea" property="roomArea" />
+         <result column="Status" property="status" />
+         <result column="CreaterID" property="createrID" />
+         <result column="CreateTime" property="createTime" />
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+      `id`,`CustomerID`,`Lati`,`longi`,`Height`,`CommunityID`,`BuildingID`,`SubNumber`,`FloorNumber`,`ApartNumber`,`RoomName`,`SideRoom`,`RoomArea`,`Status`,`CreaterID`,`CreateTime`
+    </sql>
+  
+    <select id="getPaging" resultType="com.fastrun.TempCollection.model.Room" resultMap="roomMap">
+       SELECT
+        <include refid="Base_Column_List" />
+       FROM Room
+       order by ${orderBy} limit #{offset},#{pageSize}
+    </select>
+
+    <select id="get" resultType="com.fastrun.TempCollection.model.Room" resultMap="roomMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM Room WHERE id=#{id}
+    </select>
+
+    <update id="update" parameterType="com.fastrun.TempCollection.model.Room"
+            flushCache="true"
+            statementType="PREPARED"
+            timeout="20">
+       Update Room
+        <set>
+                   <if test="model.customerID!=null">
+                           `CustomerID`=#{model.customerID},
+                       </if>
+        <if test="model.lati!=null">
+                           `Lati`=#{model.lati},
+                       </if>
+        <if test="model.longi!=null">
+                           `longi`=#{model.longi},
+                       </if>
+        <if test="model.height!=null">
+                           `Height`=#{model.height},
+                       </if>
+        <if test="model.communityID!=null">
+                           `CommunityID`=#{model.communityID},
+                       </if>
+        <if test="model.buildingID!=null">
+                           `BuildingID`=#{model.buildingID},
+                       </if>
+        <if test="model.subNumber!=null">
+                           `SubNumber`=#{model.subNumber},
+                       </if>
+        <if test="model.floorNumber!=null">
+                           `FloorNumber`=#{model.floorNumber},
+                       </if>
+        <if test="model.apartNumber!=null">
+                           `ApartNumber`=#{model.apartNumber},
+                       </if>
+        <if test="model.roomName!=null">
+                           `RoomName`=#{model.roomName},
+                       </if>
+        <if test="model.sideRoom!=null">
+                           `SideRoom`=#{model.sideRoom},
+                       </if>
+        <if test="model.roomArea!=null">
+                           `RoomArea`=#{model.roomArea},
+                       </if>
+        <if test="model.status!=null">
+                           `Status`=#{model.status},
+                       </if>
+        <if test="model.createrID!=null">
+                           `CreaterID`=#{model.createrID},
+                       </if>
+        <if test="model.createTime!=null">
+                           `CreateTime`=#{model.createTime},
+                       </if>  
+        </set>
+        WHERE id=#{model.id}
+    </update>
+
+    <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
+            timeout="20">
+        update Room set state=-1 WHERE id=#{id}
+    </update>
+
+    <insert id="insert" parameterType="com.fastrun.TempCollection.model.Room"
+            flushCache="true"
+            statementType="PREPARED"
+            keyProperty="id"
+            keyColumn=""
+            useGeneratedKeys="true"
+            timeout="20">
+        INSERT INTO Room(`CustomerID`,`Lati`,`longi`,`Height`,`CommunityID`,`BuildingID`,`SubNumber`,`FloorNumber`,`ApartNumber`,`RoomName`,`SideRoom`,`RoomArea`,`Status`,`CreaterID`,`CreateTime`) VALUES(#{model.customerID},#{model.lati},#{model.longi},#{model.height},#{model.communityID},#{model.buildingID},#{model.subNumber},#{model.floorNumber},#{model.apartNumber},#{model.roomName},#{model.sideRoom},#{model.roomArea},#{model.status},#{model.createrID},#{model.createTime})
+    </insert>
+
+
+    <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*) FROM Room
+        <!--where>
+            <if test="realName!=null and realName!=''">
+                 realName like concat('%',#{realName},'%')
+            </if>
+            and state!=-1
+        </where-->
+    </select>
+</mapper>

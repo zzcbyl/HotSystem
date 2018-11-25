@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastrun.TempCollection.dal.RechargeVoucherMapper">
+
+    <resultMap type="com.fastrun.TempCollection.model.RechargeVoucher" id="rechargeVoucherMap">
+         <id column="id" property="id" />
+         <result column="userID" property="userID" />
+         <result column="account" property="account" />
+         <result column="amount" property="amount" />
+         <result column="voucherImgPath" property="voucherImgPath" />
+         <result column="createTime" property="createTime" />
+         <result column="state" property="state" />
+         <result column="note" property="note" />
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+      `id`,`userID`,`account`,`amount`,`voucherImgPath`,`createTime`,`state`,`note`
+    </sql>
+  
+    <select id="getPaging" resultType="com.fastrun.TempCollection.model.RechargeVoucher" resultMap="rechargeVoucherMap">
+       SELECT
+        <include refid="Base_Column_List" />
+       FROM recharge_voucher
+        <where>
+            <if test="userID!=null">
+                userID=${userID}
+            </if>
+        </where>
+       order by ${orderBy} limit #{offset},#{pageSize}
+    </select>
+
+    <select id="get" resultType="com.fastrun.TempCollection.model.RechargeVoucher" resultMap="rechargeVoucherMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM recharge_voucher WHERE id=#{id}
+    </select>
+
+    <update id="update" parameterType="com.fastrun.TempCollection.model.RechargeVoucher"
+            flushCache="true"
+            statementType="PREPARED"
+            timeout="20">
+       Update recharge_voucher
+        <set>
+                   <if test="model.userID!=null">
+                           `userID`=#{model.userID},
+                       </if>
+        <if test="model.account!=null">
+                           `account`=#{model.account},
+                       </if>
+        <if test="model.amount!=null">
+                           `amount`=#{model.amount},
+                       </if>
+        <if test="model.voucherImgPath!=null">
+                           `voucherImgPath`=#{model.voucherImgPath},
+                       </if>
+        <if test="model.createTime!=null">
+                           `createTime`=#{model.createTime},
+                       </if>
+        <if test="model.state!=null">
+                           `state`=#{model.state},
+                       </if>
+        <if test="model.note!=null">
+                           `note`=#{model.note},
+                       </if>  
+        </set>
+        WHERE id=#{model.id}
+    </update>
+
+    <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
+            timeout="20">
+        update recharge_voucher set state=-1 WHERE id=#{id}
+    </update>
+
+    <insert id="insert" parameterType="com.fastrun.TempCollection.model.RechargeVoucher"
+            flushCache="true"
+            statementType="PREPARED"
+            keyProperty="id"
+            keyColumn=""
+            useGeneratedKeys="true"
+            timeout="20">
+        INSERT INTO recharge_voucher(`userID`,`account`,`amount`,`voucherImgPath`,`createTime`,`note`) VALUES(#{model.userID},#{model.account},#{model.amount},#{model.voucherImgPath},#{model.createTime},#{model.note})
+    </insert>
+
+
+    <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*) FROM recharge_voucher
+        <where>
+            <if test="userID!=null">
+                userID=${userID}
+            </if>
+        </where>
+    </select>
+</mapper>

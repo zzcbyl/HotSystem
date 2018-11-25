@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastrun.TempCollection.dal.DevicemonitorMapper">
+
+    <resultMap type="com.fastrun.TempCollection.model.Devicemonitor" id="devicemonitorMap">
+                  <id column="id" property="id" />
+         <result column="DeviceID" property="deviceID" />
+         <result column="PositionID" property="positionID" />
+         <result column="AlarmType" property="alarmType" />
+         <result column="AlarmTime" property="alarmTime" />
+         <result column="Temp" property="temp" />
+         <result column="Result" property="result" />
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+      `id`,`DeviceID`,`PositionID`,`AlarmType`,`AlarmTime`,`Temp`,`Result`
+    </sql>
+  
+    <select id="getPaging" resultType="com.fastrun.TempCollection.model.Devicemonitor" resultMap="devicemonitorMap">
+       SELECT
+        <include refid="Base_Column_List" />
+       FROM DeviceMonitor
+       order by ${orderBy} limit #{offset},#{pageSize}
+    </select>
+
+    <select id="get" resultType="com.fastrun.TempCollection.model.Devicemonitor" resultMap="devicemonitorMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM DeviceMonitor WHERE id=#{id}
+    </select>
+
+    <update id="update" parameterType="com.fastrun.TempCollection.model.Devicemonitor"
+            flushCache="true"
+            statementType="PREPARED"
+            timeout="20">
+       Update DeviceMonitor
+        <set>
+                   <if test="model.deviceID!=null">
+                           `DeviceID`=#{model.deviceID},
+                       </if>
+        <if test="model.positionID!=null">
+                           `PositionID`=#{model.positionID},
+                       </if>
+        <if test="model.alarmType!=null">
+                           `AlarmType`=#{model.alarmType},
+                       </if>
+        <if test="model.alarmTime!=null">
+                           `AlarmTime`=#{model.alarmTime},
+                       </if>
+        <if test="model.temp!=null">
+                           `Temp`=#{model.temp},
+                       </if>
+        <if test="model.result!=null">
+                           `Result`=#{model.result},
+                       </if>  
+        </set>
+        WHERE id=#{model.id}
+    </update>
+
+    <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
+            timeout="20">
+        update DeviceMonitor set state=-1 WHERE id=#{id}
+    </update>
+
+    <insert id="insert" parameterType="com.fastrun.TempCollection.model.Devicemonitor"
+            flushCache="true"
+            statementType="PREPARED"
+            keyProperty="id"
+            keyColumn=""
+            useGeneratedKeys="true"
+            timeout="20">
+        INSERT INTO DeviceMonitor(`DeviceID`,`PositionID`,`AlarmType`,`AlarmTime`,`Temp`,`Result`) VALUES(#{model.deviceID},#{model.positionID},#{model.alarmType},#{model.alarmTime},#{model.temp},#{model.result})
+    </insert>
+
+
+    <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*) FROM DeviceMonitor
+        <!--where>
+            <if test="realName!=null and realName!=''">
+                 realName like concat('%',#{realName},'%')
+            </if>
+            and state!=-1
+        </where-->
+    </select>
+</mapper>

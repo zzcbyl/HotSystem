@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastrun.TempCollection.dal.DevicetypeMapper">
+
+    <resultMap type="com.fastrun.TempCollection.model.Devicetype" id="devicetypeMap">
+                  <id column="id" property="id" />
+         <result column="DeviceType" property="deviceType" />
+         <result column="TypeName" property="typeName" />
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+      `id`,`DeviceType`,`TypeName`
+    </sql>
+  
+    <select id="getPaging" resultType="com.fastrun.TempCollection.model.Devicetype" resultMap="devicetypeMap">
+       SELECT
+        <include refid="Base_Column_List" />
+       FROM DeviceType
+       order by ${orderBy} limit #{offset},#{pageSize}
+    </select>
+
+    <select id="get" resultType="com.fastrun.TempCollection.model.Devicetype" resultMap="devicetypeMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM DeviceType WHERE id=#{id}
+    </select>
+
+    <update id="update" parameterType="com.fastrun.TempCollection.model.Devicetype"
+            flushCache="true"
+            statementType="PREPARED"
+            timeout="20">
+       Update DeviceType
+        <set>
+                   <if test="model.deviceType!=null">
+                           `DeviceType`=#{model.deviceType},
+                       </if>
+        <if test="model.typeName!=null">
+                           `TypeName`=#{model.typeName},
+                       </if>  
+        </set>
+        WHERE id=#{model.id}
+    </update>
+
+    <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
+            timeout="20">
+        update DeviceType set state=-1 WHERE id=#{id}
+    </update>
+
+    <insert id="insert" parameterType="com.fastrun.TempCollection.model.Devicetype"
+            flushCache="true"
+            statementType="PREPARED"
+            keyProperty="id"
+            keyColumn=""
+            useGeneratedKeys="true"
+            timeout="20">
+        INSERT INTO DeviceType(`DeviceType`,`TypeName`) VALUES(#{model.deviceType},#{model.typeName})
+    </insert>
+
+
+    <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*) FROM DeviceType
+        <!--where>
+            <if test="realName!=null and realName!=''">
+                 realName like concat('%',#{realName},'%')
+            </if>
+            and state!=-1
+        </where-->
+    </select>
+</mapper>

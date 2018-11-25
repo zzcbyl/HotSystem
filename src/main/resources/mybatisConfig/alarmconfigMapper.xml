@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastrun.TempCollection.dal.AlarmconfigMapper">
+
+    <resultMap type="com.fastrun.TempCollection.model.Alarmconfig" id="alarmconfigMap">
+                  <id column="id" property="id" />
+         <result column="LowAlarm2" property="lowAlarm2" />
+         <result column="LowAlarm1" property="lowAlarm1" />
+         <result column="HighAlarm1" property="highAlarm1" />
+         <result column="HighAlarm2" property="highAlarm2" />
+         <result column="Color_low2" property="colorLow2" />
+         <result column="Color_low1" property="colorLow1" />
+         <result column="Color_Normal" property="colorNormal" />
+         <result column="Color_High1" property="colorHigh1" />
+         <result column="Color_High2" property="colorHigh2" />
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+      `id`,`LowAlarm2`,`LowAlarm1`,`HighAlarm1`,`HighAlarm2`,`Color_low2`,`Color_low1`,`Color_Normal`,`Color_High1`,`Color_High2`
+    </sql>
+  
+    <select id="getPaging" resultType="com.fastrun.TempCollection.model.Alarmconfig" resultMap="alarmconfigMap">
+       SELECT
+        <include refid="Base_Column_List" />
+       FROM AlarmConfig
+       order by ${orderBy} limit #{offset},#{pageSize}
+    </select>
+
+    <select id="get" resultType="com.fastrun.TempCollection.model.Alarmconfig" resultMap="alarmconfigMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM AlarmConfig WHERE id=#{id}
+    </select>
+
+    <update id="update" parameterType="com.fastrun.TempCollection.model.Alarmconfig"
+            flushCache="true"
+            statementType="PREPARED"
+            timeout="20">
+       Update AlarmConfig
+        <set>
+                   <if test="model.lowAlarm2!=null">
+                           `LowAlarm2`=#{model.lowAlarm2},
+                       </if>
+        <if test="model.lowAlarm1!=null">
+                           `LowAlarm1`=#{model.lowAlarm1},
+                       </if>
+        <if test="model.highAlarm1!=null">
+                           `HighAlarm1`=#{model.highAlarm1},
+                       </if>
+        <if test="model.highAlarm2!=null">
+                           `HighAlarm2`=#{model.highAlarm2},
+                       </if>
+        <if test="model.colorLow2!=null">
+                           `Color_low2`=#{model.colorLow2},
+                       </if>
+        <if test="model.colorLow1!=null">
+                           `Color_low1`=#{model.colorLow1},
+                       </if>
+        <if test="model.colorNormal!=null">
+                           `Color_Normal`=#{model.colorNormal},
+                       </if>
+        <if test="model.colorHigh1!=null">
+                           `Color_High1`=#{model.colorHigh1},
+                       </if>
+        <if test="model.colorHigh2!=null">
+                           `Color_High2`=#{model.colorHigh2},
+                       </if>  
+        </set>
+        WHERE id=#{model.id}
+    </update>
+
+    <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
+            timeout="20">
+        update AlarmConfig set state=-1 WHERE id=#{id}
+    </update>
+
+    <insert id="insert" parameterType="com.fastrun.TempCollection.model.Alarmconfig"
+            flushCache="true"
+            statementType="PREPARED"
+            keyProperty="id"
+            keyColumn=""
+            useGeneratedKeys="true"
+            timeout="20">
+        INSERT INTO AlarmConfig(`LowAlarm2`,`LowAlarm1`,`HighAlarm1`,`HighAlarm2`,`Color_low2`,`Color_low1`,`Color_Normal`,`Color_High1`,`Color_High2`) VALUES(#{model.lowAlarm2},#{model.lowAlarm1},#{model.highAlarm1},#{model.highAlarm2},#{model.colorLow2},#{model.colorLow1},#{model.colorNormal},#{model.colorHigh1},#{model.colorHigh2})
+    </insert>
+
+
+    <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*) FROM AlarmConfig
+        <!--where>
+            <if test="realName!=null and realName!=''">
+                 realName like concat('%',#{realName},'%')
+            </if>
+            and state!=-1
+        </where-->
+    </select>
+</mapper>

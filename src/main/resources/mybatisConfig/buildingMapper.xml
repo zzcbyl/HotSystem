@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastrun.TempCollection.dal.BuildingMapper">
+
+    <resultMap type="com.fastrun.TempCollection.model.Building" id="buildingMap">
+        <id column="id" property="id"/>
+        <result column="Name" property="name"/>
+        <result column="BuildingNo" property="buildingNo"/>
+        <result column="CommunityID" property="communityID"/>
+        <result column="StationID" property="stationID"/>
+        <result column="Lati1" property="lati1"/>
+        <result column="longi1" property="longi1"/>
+        <result column="Lati2" property="lati2"/>
+        <result column="longi2" property="longi2"/>
+        <result column="Height" property="height"/>
+        <result column="Status" property="status"/>
+        <result column="CreaterID" property="createrID"/>
+        <result column="CreateTime" property="createTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+      `id`,`Name`,`BuildingNo`,`CommunityID`,`StationID`,`Lati1`,`longi1`,`Lati2`,`longi2`,`Height`,`Status`,`CreaterID`,`CreateTime`
+    </sql>
+
+    <select id="getPaging" resultType="com.fastrun.TempCollection.model.Building" resultMap="buildingMap">
+        SELECT
+        bui.`id`,bui.`Name`,bui.`BuildingNo`,bui.`CommunityID`,bui.`StationID`,bui.`Lati1`,bui.`longi1`,bui.`Lati2`,bui.`longi2`,bui.`Height`,bui.`Status`,bui.`CreaterID`,bui.`CreateTime`,hes.`Name`
+        AS stationName, com.`Name` AS communityName
+        FROM Building bui LEFT JOIN heatexchangestation hes ON bui.`StationID`=hes.`id` LEFT JOIN community com ON
+        bui.`CommunityID`=com.`id` WHERE bui.`Status` != 3
+        <if test="name!=''">
+            and bui.`Name` LIKE '%${name}%'
+        </if>
+        <if test="stationID!=-1">
+            and bui.stationID=#{stationID}
+        </if>
+        <if test="communityID!=-1">
+            and bui.communityID=#{communityID}
+        </if>
+        order by ${orderBy} limit #{offset},#{pageSize}
+    </select>
+
+    <select id="get" resultType="com.fastrun.TempCollection.model.Building" resultMap="buildingMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM Building WHERE id=#{id}
+    </select>
+
+    <update id="update" parameterType="com.fastrun.TempCollection.model.Building"
+            flushCache="true"
+            statementType="PREPARED"
+            timeout="20">
+        Update Building
+        <set>
+            <if test="model.name!=null">
+                `Name`=#{model.name},
+            </if>
+            <if test="model.buildingNo!=null">
+                `BuildingNo`=#{model.buildingNo},
+            </if>
+            <if test="model.communityID!=null">
+                `CommunityID`=#{model.communityID},
+            </if>
+            <if test="model.stationID!=null">
+                `StationID`=#{model.stationID},
+            </if>
+            <if test="model.lati1!=null">
+                `Lati1`=#{model.lati1},
+            </if>
+            <if test="model.longi1!=null">
+                `longi1`=#{model.longi1},
+            </if>
+            <if test="model.lati2!=null">
+                `Lati2`=#{model.lati2},
+            </if>
+            <if test="model.longi2!=null">
+                `longi2`=#{model.longi2},
+            </if>
+            <if test="model.height!=null">
+                `Height`=#{model.height},
+            </if>
+            <if test="model.status!=null">
+                `Status`=#{model.status},
+            </if>
+            <if test="model.createrID!=null">
+                `CreaterID`=#{model.createrID},
+            </if>
+            <if test="model.createTime!=null">
+                `CreateTime`=#{model.createTime},
+            </if>
+        </set>
+        WHERE id=#{model.id}
+    </update>
+
+    <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
+            timeout="20">
+        update Building set status=3 WHERE id=#{id}
+    </update>
+
+    <insert id="insert" parameterType="com.fastrun.TempCollection.model.Building"
+            flushCache="true"
+            statementType="PREPARED"
+            keyProperty="id"
+            keyColumn=""
+            useGeneratedKeys="true"
+            timeout="20">
+        INSERT INTO Building(`Name`,`BuildingNo`,`CommunityID`,`StationID`,`Lati1`,`longi1`,`Lati2`,`longi2`,`Height`,`Status`,`CreaterID`,`CreateTime`) VALUES(#{model.name},#{model.buildingNo},#{model.communityID},#{model.stationID},#{model.lati1},#{model.longi1},#{model.lati2},#{model.longi2},#{model.height},#{model.status},#{model.createrID},#{model.createTime})
+    </insert>
+
+
+    <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*) FROM Building WHERE `Status` != 3
+        <if test="name!=''">
+            and `Name` LIKE '%${name}%'
+        </if>
+        <if test="stationID!=-1">
+            and stationID=#{stationID}
+        </if>
+        <if test="communityID!=-1">
+            and communityID=#{communityID}
+        </if>
+    </select>
+</mapper>

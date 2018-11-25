@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastrun.TempCollection.dal.AccountHistoryMapper">
+
+    <resultMap type="com.fastrun.TempCollection.model.AccountHistory" id="modelMap">
+        <id column="id" property="id" />
+        <result column="type" property="type" />
+        <result column="amount" property="amount" />
+        <result column="user_id" property="userId" />
+        <result column="note" property="note" />
+        <result column="create_time" property="createTime" />
+        <result column="creater_id" property="createrId" />
+        <result column="state" property="state" />
+        <result column="relation_id" property="relationId" />
+        <result column="account_balance" property="accountBalance" />
+    </resultMap>
+
+    <select id="getPaging" resultType="com.fastrun.TempCollection.model.AccountHistory" resultMap="modelMap">
+        select account_history.*,b.realName as createrName from account_history  inner join user b  on  account_history.creater_id= b.id
+       <where>
+           <if test="userId!=null and userId>0">
+              and account_history.user_id=#{userId}
+           </if>
+           <if test="type!=null and (type==0 or type==1)">
+               and account_history.type=#{type}
+           </if>
+           and account_history.state=1
+       </where>
+        order by ${orderBy} limit #{offset},#{pageSize}
+    </select>
+
+    <select id="get" resultType="com.fastrun.TempCollection.model.AccountHistory" resultMap="modelMap">
+        SELECT * FROM account_history WHERE ID=#{id}
+    </select>
+
+    <insert id="insert" parameterType="com.fastrun.TempCollection.model.AccountHistory"
+            flushCache="true"
+            statementType="PREPARED"
+            keyProperty="id"
+            keyColumn=""
+            useGeneratedKeys="true"
+            timeout="20">
+        INSERT INTO account_history(`type`,`amount`,`user_id`,`note`,`creater_id`,`relation_id`,`account_balance`) VALUES(#{model.type},#{model.amount},#{model.userId},#{model.note},#{model.createrId},#{model.relationId},#{model.accountBalance})
+</insert>
+
+    <delete id="delete" flushCache="true" timeout="20">
+        Delete from account_history where ID=#{id}
+    </delete>
+
+    <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*) FROM account_history
+        <where>
+            <if test="userId!=null and userId>0">
+                and user_id=#{userId}
+            </if>
+            <if test="type!=null and (type==0 or type==1)">
+                and type=#{type}
+            </if>
+            and state=1
+        </where>
+    </select>
+
+    <update id="update" parameterType="com.fastrun.TempCollection.model.AccountHistory"
+            flushCache="true"
+            statementType="PREPARED"
+            timeout="20">
+        Update account_history
+        <set>
+            <if test="model.type!=null">
+                `type`=#{model.type},
+            </if>
+            <if test="model.amount!=null">
+                `amount`=#{model.amount},
+            </if>
+            <if test="model.userId!=null">
+                `user_id`=#{model.userId},
+            </if>
+            <if test="model.note!=null">
+                `note`=#{model.note},
+            </if>
+            <if test="model.createTime!=null">
+                `create_time`=#{model.createTime},
+            </if>
+            <if test="model.createrId!=null">
+                `creater_id`=#{model.createrId},
+            </if>
+            <if test="model.state!=null">
+                `state`=#{model.state},
+            </if>
+            <if test="model.relationId!=null">
+                `relation_id`=#{model.relationId},
+            </if>
+            <if test="model.accountBalance!=null">
+                `account_balance`=#{model.accountBalance},
+            </if>
+        </set>
+        WHERE id=#{model.id}
+    </update>
+</mapper>

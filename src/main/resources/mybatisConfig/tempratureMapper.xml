@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastrun.TempCollection.dal.TempratureMapper">
+
+    <resultMap type="com.fastrun.TempCollection.model.Temprature" id="tempratureMap">
+                  <id column="id" property="id" />
+         <result column="DeviceSN" property="deviceSN" />
+         <result column="DeviceID" property="deviceID" />
+         <result column="Level" property="level" />
+         <result column="Temp1" property="temp1" />
+         <result column="Temp2" property="temp2" />
+         <result column="StatusCode" property="statusCode" />
+         <result column="AddTime" property="addTime" />
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+      `id`,`DeviceSN`,`DeviceID`,`Level`,`Temp1`,`Temp2`,`StatusCode`,`AddTime`
+    </sql>
+  
+    <select id="getPaging" resultType="com.fastrun.TempCollection.model.Temprature" resultMap="tempratureMap">
+       SELECT
+        <include refid="Base_Column_List" />
+       FROM Temprature
+       order by ${orderBy} limit #{offset},#{pageSize}
+    </select>
+
+    <select id="get" resultType="com.fastrun.TempCollection.model.Temprature" resultMap="tempratureMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM Temprature WHERE id=#{id}
+    </select>
+
+    <update id="update" parameterType="com.fastrun.TempCollection.model.Temprature"
+            flushCache="true"
+            statementType="PREPARED"
+            timeout="20">
+       Update Temprature
+        <set>
+                   <if test="model.deviceSN!=null">
+                           `DeviceSN`=#{model.deviceSN},
+                       </if>
+        <if test="model.deviceID!=null">
+                           `DeviceID`=#{model.deviceID},
+                       </if>
+        <if test="model.level!=null">
+                           `Level`=#{model.level},
+                       </if>
+        <if test="model.temp1!=null">
+                           `Temp1`=#{model.temp1},
+                       </if>
+        <if test="model.temp2!=null">
+                           `Temp2`=#{model.temp2},
+                       </if>
+        <if test="model.statusCode!=null">
+                           `StatusCode`=#{model.statusCode},
+                       </if>
+        <if test="model.addTime!=null">
+                           `AddTime`=#{model.addTime},
+                       </if>  
+        </set>
+        WHERE id=#{model.id}
+    </update>
+
+    <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
+            timeout="20">
+        update Temprature set state=-1 WHERE id=#{id}
+    </update>
+
+    <insert id="insert" parameterType="com.fastrun.TempCollection.model.Temprature"
+            flushCache="true"
+            statementType="PREPARED"
+            keyProperty="id"
+            keyColumn=""
+            useGeneratedKeys="true"
+            timeout="20">
+        INSERT INTO Temprature(`DeviceSN`,`DeviceID`,`Level`,`Temp1`,`Temp2`,`StatusCode`,`AddTime`) VALUES(#{model.deviceSN},#{model.deviceID},#{model.level},#{model.temp1},#{model.temp2},#{model.statusCode},#{model.addTime})
+    </insert>
+
+
+    <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*) FROM Temprature
+        <!--where>
+            <if test="realName!=null and realName!=''">
+                 realName like concat('%',#{realName},'%')
+            </if>
+            and state!=-1
+        </where-->
+    </select>
+</mapper>
