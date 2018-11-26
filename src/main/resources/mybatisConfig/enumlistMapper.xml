@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastrun.TempCollection.dal.EnumlistMapper">
+
+    <resultMap type="com.fastrun.TempCollection.model.Enumlist" id="enumlistMap">
+        <id column="id" property="id" />
+        <result column="GroupNo" property="groupNo" />
+        <result column="Name" property="name" />
+        <result column="Value" property="value" />
+        <result column="Status" property="status" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `id`,`GroupNo`,`Name`,`Value`,`Status`
+    </sql>
+
+    <select id="getPaging" resultType="com.fastrun.TempCollection.model.Enumlist" resultMap="enumlistMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM EnumList
+        <where>
+            <if test="groupNo!=null and groupNo!=''">
+                and groupNo=#{groupNo}
+            </if>
+            and status=1
+        </where>
+        order by ${orderBy} limit #{offset},#{pageSize}
+    </select>
+
+    <select id="get" resultType="com.fastrun.TempCollection.model.Enumlist" resultMap="enumlistMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM EnumList WHERE id=#{id}
+    </select>
+
+    <update id="update" parameterType="com.fastrun.TempCollection.model.Enumlist"
+            flushCache="true"
+            statementType="PREPARED"
+            timeout="20">
+        Update EnumList
+        <set>
+            <if test="model.groupNo!=null">
+                `GroupNo`=#{model.groupNo},
+            </if>
+            <if test="model.name!=null">
+                `Name`=#{model.name},
+            </if>
+            <if test="model.value!=null">
+                `Value`=#{model.value},
+            </if>
+            <if test="model.status!=null">
+                `Status`=#{model.status},
+            </if>
+        </set>
+        WHERE id=#{model.id}
+    </update>
+
+    <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
+            timeout="20">
+        update EnumList set state=-1 WHERE id=#{id}
+    </update>
+
+    <insert id="insert" parameterType="com.fastrun.TempCollection.model.Enumlist"
+            flushCache="true"
+            statementType="PREPARED"
+            keyProperty="id"
+            keyColumn=""
+            useGeneratedKeys="true"
+            timeout="20">
+        INSERT INTO EnumList(`GroupNo`,`Name`,`Value`,`Status`) VALUES(#{model.groupNo},#{model.name},#{model.value},#{model.status})
+    </insert>
+
+    <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*) FROM EnumList
+        <where>
+            <if test="groupNo!=null and groupNo!=''">
+                and groupNo=#{groupNo}
+            </if>
+            and status=1
+        </where>
+    </select>
+</mapper>

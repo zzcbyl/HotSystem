@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastrun.TempCollection.dal.PositionMapper">
+
+    <resultMap type="com.fastrun.TempCollection.model.Position" id="roomMap">
+        <id column="id" property="id"/>
+        <result column="CustomerID" property="customerID"/>
+        <result column="Lati" property="lati"/>
+        <result column="longi" property="longi"/>
+        <result column="Height" property="height"/>
+        <result column="CommunityID" property="communityID"/>
+        <result column="BuildingID" property="buildingID"/>
+        <result column="SubNumber" property="subNumber"/>
+        <result column="FloorNumber" property="floorNumber"/>
+        <result column="ApartNumber" property="apartNumber"/>
+        <result column="RoomName" property="roomName"/>
+        <result column="ExactPosition" property="exactPosition"/>
+        <result column="SideRoom" property="sideRoom"/>
+        <result column="RoomArea" property="roomArea"/>
+        <result column="Status" property="status"/>
+        <result column="CreaterID" property="createrID"/>
+        <result column="CreateTime" property="createTime"/>
+        <result column="HeatExchangerUnitID" property="heatExchangerUnitID"/>
+        <result column="Distance" property="distance"/>
+        <result column="HouseHoldID" property="houseHoldID"/>
+        <result column="HeatingEnteryID" property="heatingEnteryID"/>
+        <result column="HeatingType" property="heatingType"/>
+        <result column="Remark" property="remark"/>
+        <result column="UpdateTime" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `id`,`CustomerID`,`Lati`,`longi`,`Height`,`CommunityID`,`BuildingID`,`SubNumber`,`FloorNumber`,`ApartNumber`,`RoomName`,`ExactPosition`,`SideRoom`,`RoomArea`,`Status`,`CreaterID`,`CreateTime`,`HeatExchangerUnitID`,`Distance`,`HouseHoldID`,`HeatingEnteryID`,`HeatingType`,`Remark`,`UpdateTime`
+    </sql>
+
+    <select id="getPaging" resultType="com.fastrun.TempCollection.model.Position" resultMap="roomMap">
+        SELECT
+        r.`id`,r.`CustomerID`,r.`Lati`,r.`longi`,r.`Height`,r.`CommunityID`,r.`BuildingID`,r.`SubNumber`,r.`FloorNumber`,r.`ApartNumber`,r.`RoomName`,r.`ExactPosition`,r.`SideRoom`,r.`RoomArea`,r.`Status`,r.`CreaterID`,r.`CreateTime`,r.`HeatExchangerUnitID`,r.`Distance`,r.`HouseHoldID`,r.`HeatingEnteryID`,r.`HeatingType`,r.`Remark`,r.`UpdateTime`,
+        cus.`Name` AS customerName,com.`Name` AS communityName, bui.`Name` AS buildingName, heu.`UnitNumber` AS
+        heatExchangerUnitNumber,hes.`id` AS stationID, c.`id` AS companyID,
+        d.`id` AS deviceID, d.`DeviceSN` AS deviceSN, d.`Temp1` AS temp1, d.`Temp2` AS temp2, d.`Level` AS level,
+        d.`CollectTime` AS collectTime
+        FROM `Position` r LEFT JOIN Customer cus ON r.`CustomerID`= cus.`id`
+        LEFT JOIN Community com ON r.`CommunityID`=com.`id`
+        LEFT JOIN Building bui ON r.`BuildingID`=bui.`id`
+        LEFT JOIN HeatExchangerUnit heu ON r.`HeatExchangerUnitID` = heu.`id`
+        LEFT JOIN HeatExchangeStation hes ON com.`StationID` = hes.`id`
+        LEFT JOIN Company c ON hes.`CompanyID`=c.`id`
+        LEFT JOIN DeviceInstallRecord dir ON r.`id`=dir.`PositionID`
+        LEFT JOIN Device d ON dir.`DeviceID`=d.`id`
+        WHERE r.`Status`!=3
+        <if test="positionID!=-1">
+            and r.`id` = #{positionID}
+        </if>
+        <if test="customerName!=''">
+            and cus.`Name` LIKE '%${customerName}%'
+        </if>
+        <if test="companyID!=-1">
+            and c.`id` = #{companyID}
+        </if>
+        <if test="stationID!=-1">
+            and hes.`id` = #{stationID}
+        </if>
+        <if test="heatExchangerUnitID!=-1">
+            and r.`HeatExchangerUnitID` = #{heatExchangerUnitID}
+        </if>
+        <if test="heatExchangerUnitID!=-1">
+            and r.`HeatExchangerUnitID` = #{heatExchangerUnitID}
+        </if>
+        <if test="communityID!=-1">
+            and r.`CommunityID` = #{communityID}
+        </if>
+        <if test="buildingID!=-1">
+            and r.`BuildingID` = #{buildingID}
+        </if>
+        <if test="subNumber!=-1">
+            and r.`SubNumber` = #{subNumber}
+        </if>
+        <if test="floorNumber!=-1">
+            and r.`FloorNumber` = #{floorNumber}
+        </if>
+        <if test="apartNumber!=-1">
+            and r.`ApartNumber` = #{apartNumber}
+        </if>
+        <if test="roomName!=''">
+            and r.`RoomName` = #{roomName}
+        </if>
+        order by ${orderBy} limit #{offset},#{pageSize}
+    </select>
+
+    <select id="get" resultType="com.fastrun.TempCollection.model.Position" resultMap="roomMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM `Position` WHERE id=#{id}
+    </select>
+
+    <update id="update" parameterType="com.fastrun.TempCollection.model.Position"
+            flushCache="true"
+            statementType="PREPARED"
+            timeout="20">
+        Update `Position`
+        <set>
+            <if test="model.customerID!=null">
+                `CustomerID`=#{model.customerID},
+            </if>
+            <if test="model.lati!=null">
+                `Lati`=#{model.lati},
+            </if>
+            <if test="model.longi!=null">
+                `longi`=#{model.longi},
+            </if>
+            <if test="model.height!=null">
+                `Height`=#{model.height},
+            </if>
+            <if test="model.communityID!=null">
+                `CommunityID`=#{model.communityID},
+            </if>
+            <if test="model.buildingID!=null">
+                `BuildingID`=#{model.buildingID},
+            </if>
+            <if test="model.subNumber!=null">
+                `SubNumber`=#{model.subNumber},
+            </if>
+            <if test="model.floorNumber!=null">
+                `FloorNumber`=#{model.floorNumber},
+            </if>
+            <if test="model.apartNumber!=null">
+                `ApartNumber`=#{model.apartNumber},
+            </if>
+            <if test="model.roomName!=null">
+                `RoomName`=#{model.roomName},
+            </if>
+            <if test="model.exactPosition!=null">
+                `ExactPosition`=#{model.exactPosition},
+            </if>
+            <if test="model.sideRoom!=null">
+                `SideRoom`=#{model.sideRoom},
+            </if>
+            <if test="model.roomArea!=null">
+                `RoomArea`=#{model.roomArea},
+            </if>
+            <if test="model.status!=null">
+                `Status`=#{model.status},
+            </if>
+            <if test="model.createrID!=null">
+                `CreaterID`=#{model.createrID},
+            </if>
+            <if test="model.createTime!=null">
+                `CreateTime`=#{model.createTime},
+            </if>
+            <if test="model.heatExchangerUnitID!=null">
+                `HeatExchangerUnitID`=#{model.heatExchangerUnitID},
+            </if>
+            <if test="model.distance!=null">
+                `Distance`=#{model.distance},
+            </if>
+            <if test="model.houseHoldID!=null">
+                `HouseHoldID`=#{model.houseHoldID},
+            </if>
+            <if test="model.heatingEnteryID!=null">
+                `HeatingEnteryID`=#{model.heatingEnteryID},
+            </if>
+            <if test="model.heatingType!=null">
+                `HeatingType`=#{model.heatingType},
+            </if>
+            <if test="model.remark!=null">
+                `Remark`=#{model.remark},
+            </if>
+            <if test="model.updateTime!=null">
+                `UpdateTime`=#{model.updateTime}
+            </if>
+        </set>
+        WHERE id=#{model.id}
+    </update>
+
+    <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
+            timeout="20">
+        update `Position` set Status=3 WHERE id=#{id}
+    </update>
+
+    <insert id="insert" parameterType="com.fastrun.TempCollection.model.Position"
+            flushCache="true"
+            statementType="PREPARED"
+            keyProperty="id"
+            keyColumn=""
+            useGeneratedKeys="true"
+            timeout="20">
+        INSERT INTO `Position`(`CustomerID`,`Lati`,`longi`,`Height`,`CommunityID`,`BuildingID`,`SubNumber`,`FloorNumber`,`ApartNumber`,`RoomName`,`ExactPosition`,`SideRoom`,`RoomArea`,`Status`,`CreaterID`,`CreateTime`,`HeatExchangerUnitID`,`Distance`,`HouseHoldID`,`HeatingEnteryID`,`HeatingType`,`Remark`) VALUES(#{model.customerID},#{model.lati},#{model.longi},#{model.height},#{model.communityID},#{model.buildingID},#{model.subNumber},#{model.floorNumber},#{model.apartNumber},#{model.roomName},#{model.exactPosition},#{model.sideRoom},#{model.roomArea},#{model.status},#{model.createrID},#{model.createTime},#{model.heatExchangerUnitID},#{model.distance},#{model.houseHoldID},#{model.heatingEnteryID},#{model.heatingType},#{model.remark})
+    </insert>
+
+
+    <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*) FROM `Position` r LEFT JOIN Customer cus ON r.`CustomerID`= cus.`id`
+        LEFT JOIN Community com ON r.`CommunityID`=com.`id`
+        LEFT JOIN Building bui ON r.`BuildingID`=bui.`id`
+        LEFT JOIN HeatExchangerUnit heu ON r.`HeatExchangerUnitID` = heu.`id`
+        LEFT JOIN HeatExchangeStation hes ON heu.`StationID` = hes.`id`
+        LEFT JOIN Company c ON hes.`CompanyID`=c.`id`
+        LEFT JOIN DeviceInstallRecord dir ON r.`id`=dir.`PositionID`
+        LEFT JOIN Device d ON dir.`DeviceID`=d.`id`
+        WHERE r.`Status`!=3
+        <if test="positionID!=-1">
+            and r.`id` = #{positionID}
+        </if>
+        <if test="customerName!=''">
+            and cus.`Name` LIKE '%${customerName}%'
+        </if>
+        <if test="companyID!=-1">
+            and c.`id` = #{companyID}
+        </if>
+        <if test="stationID!=-1">
+            and hes.`id` = #{stationID}
+        </if>
+        <if test="heatExchangerUnitID!=-1">
+            and r.`HeatExchangerUnitID` = #{heatExchangerUnitID}
+        </if>
+        <if test="heatExchangerUnitID!=-1">
+            and r.`HeatExchangerUnitID` = #{heatExchangerUnitID}
+        </if>
+        <if test="communityID!=-1">
+            and r.`CommunityID` = #{communityID}
+        </if>
+        <if test="buildingID!=-1">
+            and r.`BuildingID` = #{buildingID}
+        </if>
+        <if test="subNumber!=-1">
+            and r.`SubNumber` = #{subNumber}
+        </if>
+        <if test="floorNumber!=-1">
+            and r.`FloorNumber` = #{floorNumber}
+        </if>
+        <if test="apartNumber!=-1">
+            and r.`ApartNumber` = #{apartNumber}
+        </if>
+        <if test="roomName!=''">
+            and r.`RoomName` = #{roomName}
+        </if>
+
+    </select>
+
+    <select id="getByName" resultType="com.fastrun.TempCollection.model.Position">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM `Position` WHERE `Status` != 3 AND `CommunityID` = #{communityID} AND
+        `BuildingID` = #{buildingID} AND `SubNumber` = #{subNumber} AND `FloorNumber` = #{floorNumber} AND
+        `ApartNumber` = #{apartNumber} AND `RoomName` = #{roomName}
+    </select>
+</mapper>
