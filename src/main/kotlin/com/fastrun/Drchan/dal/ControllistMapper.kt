@@ -8,14 +8,14 @@ interface ControllistMapper {
 
     fun insert(@Param("model") model: Controllist): Int
 
-    fun update(@Param("model") model:Controllist):Int
-    
-    fun get(@Param("id") id:Int):Controllist
+    fun update(@Param("model") model: Controllist): Int
 
-    fun getPaging(@Param("offset") offset:Int,@Param("pageSize") pageSize:Int,@Param("orderBy") orderBy:String): List<Controllist>
+    fun get(@Param("id") id: Int): Controllist
 
-    fun getCount():Int
+    fun getPaging(@Param("offset") offset: Int, @Param("pageSize") pageSize: Int, @Param("orderBy") orderBy: String): List<Controllist>
 
-    fun delete(@Param("id") id:Int): Int
+    fun getCount(): Int
+
+    fun delete(@Param("id") id: Int): Int
 
 }

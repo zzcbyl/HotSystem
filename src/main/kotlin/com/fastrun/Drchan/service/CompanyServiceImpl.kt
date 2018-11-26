@@ -1,12 +1,11 @@
 package com.fastrun.TempCollection.service
 
+import com.fastrun.TempCollection.dal.CompanyMapper
 import com.fastrun.TempCollection.model.Company
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import javax.annotation.Resource
-import com.fastrun.TempCollection.dal.CompanyMapper
-import org.apache.ibatis.annotations.Param
 
 @Service
 class CompanyServiceImpl : CompanyService {

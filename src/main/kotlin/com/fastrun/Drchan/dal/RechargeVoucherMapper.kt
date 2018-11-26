@@ -8,14 +8,14 @@ interface RechargeVoucherMapper {
 
     fun insert(@Param("model") model: RechargeVoucher): Int
 
-    fun update(@Param("model") model:RechargeVoucher):Int
-    
-    fun get(@Param("id") id:Int):RechargeVoucher
+    fun update(@Param("model") model: RechargeVoucher): Int
 
-    fun getPaging(@Param("userID") userID:Int, @Param("offset") offset:Int,@Param("pageSize") pageSize:Int,@Param("orderBy") orderBy:String): List<RechargeVoucher>
+    fun get(@Param("id") id: Int): RechargeVoucher
 
-    fun getCount(@Param("userID") userID:Int):Int
+    fun getPaging(@Param("userID") userID: Int, @Param("offset") offset: Int, @Param("pageSize") pageSize: Int, @Param("orderBy") orderBy: String): List<RechargeVoucher>
 
-    fun delete(@Param("id") id:Int): Int
+    fun getCount(@Param("userID") userID: Int): Int
+
+    fun delete(@Param("id") id: Int): Int
 
 }

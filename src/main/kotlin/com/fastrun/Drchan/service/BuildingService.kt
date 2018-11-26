@@ -1,7 +1,7 @@
 package com.fastrun.TempCollection.service
 
 import com.fastrun.TempCollection.model.Building
-import org.apache.ibatis.annotations.Param
+
 
 interface BuildingService {
 
@@ -16,7 +16,7 @@ interface BuildingService {
     /*
     * 获取记录数
     * */
-    fun getCount(name: String, stationID: Int, communityID: Int): Int?
+    fun getCount(name: String, companyID: Int, stationID: Int, communityID: Int): Int?
 
     /*
     * 分页函数
@@ -26,6 +26,7 @@ interface BuildingService {
     * pageSize：页容量
     * orderBy：排序条件
     * */
-    fun getPaging(name: String, stationID: Int, communityID: Int, offset: Int, pageSize: Int, orderBy: String): List<Building>?
+    fun getPaging(name: String, companyID: Int, stationID: Int, communityID: Int, offset: Int, pageSize: Int, orderBy: String): List<Building>?
 
+    fun getByName(name: String, stationID: Int, communityID: Int): Building?
 }

@@ -8,14 +8,14 @@ interface ServiceTaskMapper {
 
     fun insert(@Param("model") model: ServiceTask): Int
 
-    fun update(@Param("model") model:ServiceTask):Int
-    
-    fun get(@Param("id") id:Int):ServiceTask
+    fun update(@Param("model") model: ServiceTask): Int
 
-    fun getPaging(@Param("userId") userId:Int,@Param("offset") offset:Int,@Param("pageSize") pageSize:Int,@Param("orderBy") orderBy:String): List<ServiceTask>
+    fun get(@Param("id") id: Int): ServiceTask
 
-    fun getCount(@Param("userId") userId:Int):Int
+    fun getPaging(@Param("userId") userId: Int, @Param("offset") offset: Int, @Param("pageSize") pageSize: Int, @Param("orderBy") orderBy: String): List<ServiceTask>
 
-    fun delete(@Param("id") id:Int): Int
+    fun getCount(@Param("userId") userId: Int): Int
+
+    fun delete(@Param("id") id: Int): Int
 
 }

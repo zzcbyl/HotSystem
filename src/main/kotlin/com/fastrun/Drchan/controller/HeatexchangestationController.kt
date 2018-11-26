@@ -60,9 +60,9 @@ class HeatexchangestationController {
                   @RequestParam(name = "page", defaultValue = "1", required = true) offset: Int,
                   @RequestParam(name = "pagesize", defaultValue = "20", required = true) pageSize: Int,
                   @RequestParam(name = "sortname", defaultValue = "id", required = false) sortname: String,
-                  @RequestParam(name = "sortorder", defaultValue = "asc", required = false) sortorder: String): String {
+                  @RequestParam(name = "sortorder", defaultValue = "desc", required = false) sortorder: String): String {
         var orderBy = sortname + " " + sortorder;
-        var items = _service?.getPaging(name, companyID, parentID, offset - 1, pageSize, orderBy)
+        var items = _service?.getPaging(name, companyID, parentID, (offset - 1) * pageSize, pageSize, orderBy)
         var counts = _service?.getCount(name, companyID, parentID)
 
         val jsonMap = HashMap<String, Any>()

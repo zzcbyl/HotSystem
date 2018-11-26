@@ -8,14 +8,14 @@ interface DeviceinstallrecordMapper {
 
     fun insert(@Param("model") model: Deviceinstallrecord): Int
 
-    fun update(@Param("model") model:Deviceinstallrecord):Int
-    
-    fun get(@Param("id") id:Int):Deviceinstallrecord
+    fun update(@Param("model") model: Deviceinstallrecord): Int
 
-    fun getPaging(@Param("offset") offset:Int,@Param("pageSize") pageSize:Int,@Param("orderBy") orderBy:String): List<Deviceinstallrecord>
+    fun get(@Param("id") id: Int): Deviceinstallrecord
 
-    fun getCount():Int
+    fun getPaging(@Param("offset") offset: Int, @Param("pageSize") pageSize: Int, @Param("orderBy") orderBy: String): List<Deviceinstallrecord>
 
-    fun delete(@Param("id") id:Int): Int
+    fun getCount(): Int
+
+    fun delete(@Param("id") id: Int): Int
 
 }

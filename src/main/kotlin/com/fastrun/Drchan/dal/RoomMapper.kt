@@ -8,14 +8,14 @@ interface RoomMapper {
 
     fun insert(@Param("model") model: Room): Int
 
-    fun update(@Param("model") model:Room):Int
-    
-    fun get(@Param("id") id:Int):Room
+    fun update(@Param("model") model: Room): Int
 
-    fun getPaging(@Param("offset") offset:Int,@Param("pageSize") pageSize:Int,@Param("orderBy") orderBy:String): List<Room>
+    fun get(@Param("id") id: Int): Room
 
-    fun getCount():Int
+    fun getPaging(@Param("offset") offset: Int, @Param("pageSize") pageSize: Int, @Param("orderBy") orderBy: String): List<Room>
 
-    fun delete(@Param("id") id:Int): Int
+    fun getCount(): Int
+
+    fun delete(@Param("id") id: Int): Int
 
 }

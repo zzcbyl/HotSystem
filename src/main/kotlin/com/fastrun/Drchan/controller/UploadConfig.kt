@@ -12,17 +12,17 @@ import org.springframework.stereotype.Component
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @Component
-@ConfigurationProperties(prefix="upload")
+@ConfigurationProperties(prefix = "upload")
 @PropertySource("classpath:/upload.properties")
 class UploadConfig {
     /**
      * 在配置文件中配置的文件绝对路径
      */
-     lateinit var location: String;
+    lateinit var location: String;
     /*
     * 浏览路径
     * */
-    lateinit var  browserPath:String
+    lateinit var browserPath: String
 
 
     @Bean

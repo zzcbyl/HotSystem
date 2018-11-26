@@ -67,7 +67,7 @@ class EmployeeController {
                   @RequestParam(name = "sortname", defaultValue = "id", required = false) sortname: String,
                   @RequestParam(name = "sortorder", defaultValue = "asc", required = false) sortorder: String): String {
         var orderBy = sortname + " " + sortorder;
-        var items = employService?.getPaging(account, companyID, stationID, offset - 1, pageSize, orderBy)
+        var items = employService?.getPaging(account, companyID, stationID, (offset - 1) * pageSize, pageSize, orderBy)
         var counts = employService?.getCount(account, companyID, stationID)
 
         val jsonMap = HashMap<String, Any>()
@@ -95,7 +95,7 @@ class EmployeeController {
      */
     @PostMapping("resetPassword")
     @ResponseBody
-            //fun resetPassword(@RequestParam(required = true) id: Int, @RequestParam(required = true) password: String): ResponseData {
+    //fun resetPassword(@RequestParam(required = true) id: Int, @RequestParam(required = true) password: String): ResponseData {
     fun resetPassword(@RequestBody model: Employee): ResponseData {
         val re = ResponseData()
         var newPassword = AESEncoder.AESEncode(AESEncoder.salt, model.password).toString();

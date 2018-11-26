@@ -1,22 +1,21 @@
 package com.fastrun.TempCollection.service
 
 import com.fastrun.TempCollection.model.Controllist
-import org.apache.ibatis.annotations.Param
 
 interface ControllistService {
 
     fun insert(model: Controllist): Int?
 
-    fun update(model:Controllist):Int?
+    fun update(model: Controllist): Int?
 
-    fun delete(id:Int): Int?
+    fun delete(id: Int): Int?
 
-    fun get(id:Int):Controllist?
+    fun get(id: Int): Controllist?
 
     /*
     * 获取记录数
     * */
-    fun getCount():Int?
+    fun getCount(): Int?
 
     /*
     * 分页函数
@@ -26,6 +25,6 @@ interface ControllistService {
     * pageSize：页容量
     * orderBy：排序条件
     * */
-    fun getPaging(offset:Int,pageSize:Int,orderBy:String): List<Controllist>?
+    fun getPaging(offset: Int, pageSize: Int, orderBy: String): List<Controllist>?
 
 }

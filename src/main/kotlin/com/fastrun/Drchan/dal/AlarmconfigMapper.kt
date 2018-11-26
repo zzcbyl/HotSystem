@@ -8,14 +8,14 @@ interface AlarmconfigMapper {
 
     fun insert(@Param("model") model: Alarmconfig): Int
 
-    fun update(@Param("model") model:Alarmconfig):Int
-    
-    fun get(@Param("id") id:Int):Alarmconfig
+    fun update(@Param("model") model: Alarmconfig): Int
 
-    fun getPaging(@Param("offset") offset:Int,@Param("pageSize") pageSize:Int,@Param("orderBy") orderBy:String): List<Alarmconfig>
+    fun get(@Param("id") id: Int): Alarmconfig
 
-    fun getCount():Int
+    fun getPaging(@Param("offset") offset: Int, @Param("pageSize") pageSize: Int, @Param("orderBy") orderBy: String): List<Alarmconfig>
 
-    fun delete(@Param("id") id:Int): Int
+    fun getCount(): Int
+
+    fun delete(@Param("id") id: Int): Int
 
 }

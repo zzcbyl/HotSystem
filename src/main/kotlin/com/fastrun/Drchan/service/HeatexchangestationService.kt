@@ -1,7 +1,6 @@
 package com.fastrun.TempCollection.service
 
 import com.fastrun.TempCollection.model.Heatexchangestation
-import org.apache.ibatis.annotations.Param
 
 interface HeatexchangestationService {
 

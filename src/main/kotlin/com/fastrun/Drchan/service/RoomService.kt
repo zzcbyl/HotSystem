@@ -1,22 +1,21 @@
 package com.fastrun.TempCollection.service
 
 import com.fastrun.TempCollection.model.Room
-import org.apache.ibatis.annotations.Param
 
 interface RoomService {
 
     fun insert(model: Room): Int?
 
-    fun update(model:Room):Int?
+    fun update(model: Room): Int?
 
-    fun delete(id:Int): Int?
+    fun delete(id: Int): Int?
 
-    fun get(id:Int):Room?
+    fun get(id: Int): Room?
 
     /*
     * 获取记录数
     * */
-    fun getCount():Int?
+    fun getCount(): Int?
 
     /*
     * 分页函数
@@ -26,6 +25,6 @@ interface RoomService {
     * pageSize：页容量
     * orderBy：排序条件
     * */
-    fun getPaging(offset:Int,pageSize:Int,orderBy:String): List<Room>?
+    fun getPaging(offset: Int, pageSize: Int, orderBy: String): List<Room>?
 
 }

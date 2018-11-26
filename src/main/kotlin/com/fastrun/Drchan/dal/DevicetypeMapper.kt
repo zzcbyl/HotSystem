@@ -8,14 +8,14 @@ interface DevicetypeMapper {
 
     fun insert(@Param("model") model: Devicetype): Int
 
-    fun update(@Param("model") model:Devicetype):Int
-    
-    fun get(@Param("id") id:Int):Devicetype
+    fun update(@Param("model") model: Devicetype): Int
 
-    fun getPaging(@Param("offset") offset:Int,@Param("pageSize") pageSize:Int,@Param("orderBy") orderBy:String): List<Devicetype>
+    fun get(@Param("id") id: Int): Devicetype
 
-    fun getCount():Int
+    fun getPaging(@Param("offset") offset: Int, @Param("pageSize") pageSize: Int, @Param("orderBy") orderBy: String): List<Devicetype>
 
-    fun delete(@Param("id") id:Int): Int
+    fun getCount(): Int
+
+    fun delete(@Param("id") id: Int): Int
 
 }

@@ -8,14 +8,14 @@ interface ServiceRecordMapper {
 
     fun insert(@Param("model") model: ServiceRecord): Int
 
-    fun update(@Param("model") model:ServiceRecord):Int
-    
-    fun get(@Param("id") id:Int):ServiceRecord
+    fun update(@Param("model") model: ServiceRecord): Int
 
-    fun getPaging(@Param("offset") offset:Int,@Param("pageSize") pageSize:Int,@Param("orderBy") orderBy:String): List<ServiceRecord>
+    fun get(@Param("id") id: Int): ServiceRecord
 
-    fun getCount():Int
+    fun getPaging(@Param("offset") offset: Int, @Param("pageSize") pageSize: Int, @Param("orderBy") orderBy: String): List<ServiceRecord>
 
-    fun delete(@Param("id") id:Int): Int
+    fun getCount(): Int
+
+    fun delete(@Param("id") id: Int): Int
 
 }

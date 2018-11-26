@@ -1,22 +1,21 @@
 package com.fastrun.TempCollection.service
 
 import com.fastrun.TempCollection.model.Devicemonitor
-import org.apache.ibatis.annotations.Param
 
 interface DevicemonitorService {
 
     fun insert(model: Devicemonitor): Int?
 
-    fun update(model:Devicemonitor):Int?
+    fun update(model: Devicemonitor): Int?
 
-    fun delete(id:Int): Int?
+    fun delete(id: Int): Int?
 
-    fun get(id:Int):Devicemonitor?
+    fun get(id: Int): Devicemonitor?
 
     /*
     * 获取记录数
     * */
-    fun getCount():Int?
+    fun getCount(): Int?
 
     /*
     * 分页函数
@@ -26,6 +25,6 @@ interface DevicemonitorService {
     * pageSize：页容量
     * orderBy：排序条件
     * */
-    fun getPaging(offset:Int,pageSize:Int,orderBy:String): List<Devicemonitor>?
+    fun getPaging(offset: Int, pageSize: Int, orderBy: String): List<Devicemonitor>?
 
 }

@@ -4,34 +4,43 @@
 <mapper namespace="com.fastrun.TempCollection.dal.CustomerMapper">
 
     <resultMap type="com.fastrun.TempCollection.model.Customer" id="customerMap">
-                  <id column="id" property="id" />
-         <result column="Name" property="name" />
-         <result column="Birthday" property="birthday" />
-         <result column="Gender" property="gender" />
-         <result column="Interest" property="interest" />
-         <result column="PhoneNumber" property="phoneNumber" />
-         <result column="CID" property="cID" />
-         <result column="CheckInTime" property="checkInTime" />
-         <result column="Account" property="account" />
-         <result column="Password" property="password" />
-         <result column="Download" property="download" />
-         <result column="Registered" property="registered" />
+        <id column="id" property="id"/>
+        <result column="Name" property="name"/>
+        <result column="Birthday" property="birthday"/>
+        <result column="Gender" property="gender"/>
+        <result column="Interest" property="interest"/>
+        <result column="PhoneNumber" property="phoneNumber"/>
+        <result column="CID" property="cID"/>
+        <result column="CheckInTime" property="checkInTime"/>
+        <result column="Account" property="account"/>
+        <result column="Password" property="password"/>
+        <result column="Download" property="download"/>
+        <result column="Registered" property="registered"/>
     </resultMap>
-    
+
     <sql id="Base_Column_List">
-      `id`,`Name`,`Birthday`,`Gender`,`Interest`,`PhoneNumber`,`CID`,`CheckInTime`,`Account`,`Password`,`Download`,`Registered`
+        `id`,`Name`,`Birthday`,`Gender`,`Interest`,`PhoneNumber`,`CID`,`CheckInTime`,`Account`,`Password`,`Download`,`Registered`
     </sql>
-  
+
     <select id="getPaging" resultType="com.fastrun.TempCollection.model.Customer" resultMap="customerMap">
-       SELECT
+        SELECT
         <include refid="Base_Column_List" />
-       FROM Customer
-       order by ${orderBy} limit #{offset},#{pageSize}
+        FROM Customer WHERE 1=1
+        <if test="name!=''">
+            and `Name` LIKE '%${name}%'
+        </if>
+        <if test="phoneNumber!=''">
+            and `PhoneNumber` LIKE '%${phoneNumber}%'
+        </if>
+        <if test="cID!=''">
+            and `CID` LIKE '%${cID}%'
+        </if>
+        order by ${orderBy} limit #{offset},#{pageSize}
     </select>
 
     <select id="get" resultType="com.fastrun.TempCollection.model.Customer" resultMap="customerMap">
         SELECT
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         FROM Customer WHERE id=#{id}
     </select>
 
@@ -39,48 +48,48 @@
             flushCache="true"
             statementType="PREPARED"
             timeout="20">
-       Update Customer
+        Update Customer
         <set>
-                   <if test="model.name!=null">
-                           `Name`=#{model.name},
-                       </if>
-        <if test="model.birthday!=null">
-                           `Birthday`=#{model.birthday},
-                       </if>
-        <if test="model.gender!=null">
-                           `Gender`=#{model.gender},
-                       </if>
-        <if test="model.interest!=null">
-                           `Interest`=#{model.interest},
-                       </if>
-        <if test="model.phoneNumber!=null">
-                           `PhoneNumber`=#{model.phoneNumber},
-                       </if>
-        <if test="model.cID!=null">
-                           `CID`=#{model.cID},
-                       </if>
-        <if test="model.checkInTime!=null">
-                           `CheckInTime`=#{model.checkInTime},
-                       </if>
-        <if test="model.account!=null">
-                           `Account`=#{model.account},
-                       </if>
-        <if test="model.password!=null">
-                           `Password`=#{model.password},
-                       </if>
-        <if test="model.download!=null">
-                           `Download`=#{model.download},
-                       </if>
-        <if test="model.registered!=null">
-                           `Registered`=#{model.registered},
-                       </if>  
+            <if test="model.name!=null">
+                `Name`=#{model.name},
+            </if>
+            <if test="model.birthday!=null">
+                `Birthday`=#{model.birthday},
+            </if>
+            <if test="model.gender!=null">
+                `Gender`=#{model.gender},
+            </if>
+            <if test="model.interest!=null">
+                `Interest`=#{model.interest},
+            </if>
+            <if test="model.phoneNumber!=null">
+                `PhoneNumber`=#{model.phoneNumber},
+            </if>
+            <if test="model.cID!=null">
+                `CID`=#{model.cID},
+            </if>
+            <if test="model.checkInTime!=null">
+                `CheckInTime`=#{model.checkInTime},
+            </if>
+            <if test="model.account!=null">
+                `Account`=#{model.account},
+            </if>
+            <if test="model.password!=null">
+                `Password`=#{model.password},
+            </if>
+            <if test="model.download!=null">
+                `Download`=#{model.download},
+            </if>
+            <if test="model.registered!=null">
+                `Registered`=#{model.registered},
+            </if>
         </set>
         WHERE id=#{model.id}
     </update>
 
     <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
             timeout="20">
-        update Customer set state=-1 WHERE id=#{id}
+        update Customer set Status=3 WHERE id=#{id}
     </update>
 
     <insert id="insert" parameterType="com.fastrun.TempCollection.model.Customer"
@@ -95,12 +104,27 @@
 
 
     <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
-        SELECT count(*) FROM Customer
-        <!--where>
-            <if test="realName!=null and realName!=''">
-                 realName like concat('%',#{realName},'%')
-            </if>
-            and state!=-1
-        </where-->
+        SELECT count(*) FROM Customer WHERE 1=1
+        <if test="name!=''">
+            and `Name` LIKE '%${name}%'
+        </if>
+        <if test="phoneNumber!=''">
+            and `PhoneNumber` LIKE '%${phoneNumber}%'
+        </if>
+        <if test="cID!=''">
+            and `CID` LIKE '%${cID}%'
+        </if>
+    </select>
+
+    <select id="getLast" resultType="com.fastrun.TempCollection.model.Customer" resultMap="customerMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM Customer ORDER BY `id` DESC limit 1
+    </select>
+
+    <select id="getByName" resultType="com.fastrun.TempCollection.model.Customer">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM Customer WHERE `Name` = #{name} AND `PhoneNumber` = #{phoneNumber}
     </select>
 </mapper>

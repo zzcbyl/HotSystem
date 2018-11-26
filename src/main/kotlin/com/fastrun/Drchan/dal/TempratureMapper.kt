@@ -8,14 +8,14 @@ interface TempratureMapper {
 
     fun insert(@Param("model") model: Temprature): Int
 
-    fun update(@Param("model") model:Temprature):Int
-    
-    fun get(@Param("id") id:Int):Temprature
+    fun update(@Param("model") model: Temprature): Int
 
-    fun getPaging(@Param("offset") offset:Int,@Param("pageSize") pageSize:Int,@Param("orderBy") orderBy:String): List<Temprature>
+    fun get(@Param("id") id: Int): Temprature
 
-    fun getCount():Int
+    fun getPaging(@Param("offset") offset: Int, @Param("pageSize") pageSize: Int, @Param("orderBy") orderBy: String): List<Temprature>
 
-    fun delete(@Param("id") id:Int): Int
+    fun getCount(): Int
+
+    fun delete(@Param("id") id: Int): Int
 
 }

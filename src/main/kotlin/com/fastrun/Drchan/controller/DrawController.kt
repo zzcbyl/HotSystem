@@ -5,13 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.servlet.ModelAndView
 
 @Controller
-class DrawController
-{
+class DrawController {
     @GetMapping("/draw")
-    fun draw():ModelAndView
-    {
-        var m=ModelAndView()
-        m.viewName="/draw"
+    fun draw(): ModelAndView {
+        var m = ModelAndView()
+        m.viewName = "/draw"
         return m;
     }
 }

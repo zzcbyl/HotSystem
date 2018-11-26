@@ -1,22 +1,21 @@
 package com.fastrun.TempCollection.service
 
 import com.fastrun.TempCollection.model.Controlrecord
-import org.apache.ibatis.annotations.Param
 
 interface ControlrecordService {
 
     fun insert(model: Controlrecord): Int?
 
-    fun update(model:Controlrecord):Int?
+    fun update(model: Controlrecord): Int?
 
-    fun delete(id:Int): Int?
+    fun delete(id: Int): Int?
 
-    fun get(id:Int):Controlrecord?
+    fun get(id: Int): Controlrecord?
 
     /*
     * 获取记录数
     * */
-    fun getCount():Int?
+    fun getCount(): Int?
 
     /*
     * 分页函数
@@ -26,6 +25,6 @@ interface ControlrecordService {
     * pageSize：页容量
     * orderBy：排序条件
     * */
-    fun getPaging(offset:Int,pageSize:Int,orderBy:String): List<Controlrecord>?
+    fun getPaging(offset: Int, pageSize: Int, orderBy: String): List<Controlrecord>?
 
 }

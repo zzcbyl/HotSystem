@@ -8,14 +8,14 @@ interface DevicemonitorMapper {
 
     fun insert(@Param("model") model: Devicemonitor): Int
 
-    fun update(@Param("model") model:Devicemonitor):Int
-    
-    fun get(@Param("id") id:Int):Devicemonitor
+    fun update(@Param("model") model: Devicemonitor): Int
 
-    fun getPaging(@Param("offset") offset:Int,@Param("pageSize") pageSize:Int,@Param("orderBy") orderBy:String): List<Devicemonitor>
+    fun get(@Param("id") id: Int): Devicemonitor
 
-    fun getCount():Int
+    fun getPaging(@Param("offset") offset: Int, @Param("pageSize") pageSize: Int, @Param("orderBy") orderBy: String): List<Devicemonitor>
 
-    fun delete(@Param("id") id:Int): Int
+    fun getCount(): Int
+
+    fun delete(@Param("id") id: Int): Int
 
 }

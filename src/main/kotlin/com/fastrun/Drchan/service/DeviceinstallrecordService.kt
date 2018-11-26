@@ -1,22 +1,21 @@
 package com.fastrun.TempCollection.service
 
 import com.fastrun.TempCollection.model.Deviceinstallrecord
-import org.apache.ibatis.annotations.Param
 
 interface DeviceinstallrecordService {
 
     fun insert(model: Deviceinstallrecord): Int?
 
-    fun update(model:Deviceinstallrecord):Int?
+    fun update(model: Deviceinstallrecord): Int?
 
-    fun delete(id:Int): Int?
+    fun delete(id: Int): Int?
 
-    fun get(id:Int):Deviceinstallrecord?
+    fun get(id: Int): Deviceinstallrecord?
 
     /*
     * 获取记录数
     * */
-    fun getCount():Int?
+    fun getCount(): Int?
 
     /*
     * 分页函数
@@ -26,6 +25,6 @@ interface DeviceinstallrecordService {
     * pageSize：页容量
     * orderBy：排序条件
     * */
-    fun getPaging(offset:Int,pageSize:Int,orderBy:String): List<Deviceinstallrecord>?
+    fun getPaging(offset: Int, pageSize: Int, orderBy: String): List<Deviceinstallrecord>?
 
 }

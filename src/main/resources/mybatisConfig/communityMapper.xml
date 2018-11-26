@@ -12,19 +12,26 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-      `id`,`Name`,`StationID`,`Status`,`CreateTime`
+        `id`,`Name`,`StationID`,`Status`,`CreateTime`,`CommunityID`,`RegionalID`,`HeatingArea`,`MapX`,`MapY`,`CommunityType`,`CommunityAddress`,`HouseHoldCount`,`Remark`,`UpdateTime`
     </sql>
 
     <select id="getPaging" resultType="com.fastrun.TempCollection.model.Community" resultMap="communityMap">
         SELECT
-        com.`id`,com.`Name`,com.`StationID`,com.`Status`,com.`CreateTime`,hes.`Name` AS stationName
-        FROM Community com LEFT JOIN heatexchangestation hes ON com.`StationID`=hes.`id` WHERE com.`Status`!=3
-        <if test="name!=''">
-            and com.`Name` LIKE '%${name}%'
+        com.`id`,com.`Name`,com.`StationID`,com.`Status`,com.`CreateTime`,com.`CommunityID`,com.`RegionalID`,com.`HeatingArea`,com.`MapX`,com.`MapY`,com.`CommunityType`,com.`CommunityAddress`,com.`HouseHoldCount`,com.`Remark`,com.`UpdateTime`,
+        hes.`Name` AS stationName, company.`id` AS companyID, company.`Name` AS companyName
+        FROM Community com LEFT JOIN HeatExchangeStation hes ON com.`StationID`=hes.`id`
+        LEFT JOIN Company company ON hes.`CompanyID`=company.`id`
+        WHERE com.`Status`!=3
+        <if test="companyID!=-1">
+            AND company.`id`=#{companyID}
         </if>
         <if test="stationID!=-1">
-            and com.stationID=#{stationID}
+            AND com.`StationID`=#{stationID}
         </if>
+        <if test="name!=''">
+            AND com.`Name` LIKE '%${name}%'
+        </if>
+
         order by ${orderBy} limit #{offset},#{pageSize}
     </select>
 
@@ -52,13 +59,43 @@
             <if test="model.createTime!=null">
                 `CreateTime`=#{model.createTime},
             </if>
+            <if test="model.communityID!=null">
+                `CommunityID`=#{model.communityID},
+            </if>
+            <if test="model.regionalID!=null">
+                `RegionalID`=#{model.regionalID},
+            </if>
+            <if test="model.heatingArea!=null">
+                `HeatingArea`=#{model.heatingArea},
+            </if>
+            <if test="model.mapX!=null">
+                `MapX`=#{model.mapX},
+            </if>
+            <if test="model.mapY!=null">
+                `MapY`=#{model.mapY},
+            </if>
+            <if test="model.communityType!=null">
+                `CommunityType`=#{model.communityType},
+            </if>
+            <if test="model.communityAddress!=null">
+                `CommunityAddress`=#{model.communityAddress},
+            </if>
+            <if test="model.houseHoldCount!=null">
+                `HouseHoldCount`=#{model.houseHoldCount},
+            </if>
+            <if test="model.remark!=null">
+                `Remark`=#{model.remark},
+            </if>
+            <if test="model.updateTime!=null">
+                `UpdateTime`=#{model.updateTime},
+            </if>
         </set>
         WHERE id=#{model.id}
     </update>
 
     <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
             timeout="20">
-        update Community set status=3 WHERE id=#{id}
+        update Community set `Status`=3 WHERE `id`=#{id}
     </update>
 
     <insert id="insert" parameterType="com.fastrun.TempCollection.model.Community"
@@ -68,17 +105,29 @@
             keyColumn=""
             useGeneratedKeys="true"
             timeout="20">
-        INSERT INTO Community(`Name`,`StationID`,`Status`,`CreateTime`) VALUES(#{model.name},#{model.stationID},#{model.status},#{model.createTime})
+        INSERT INTO Community(`Name`,`StationID`,`Status`,`CreateTime`,`CommunityID`,`RegionalID`,`HeatingArea`,`MapX`,`MapY`,`CommunityType`,`CommunityAddress`,`HouseHoldCount`,`Remark`)
+        VALUES(#{model.name},#{model.stationID},#{model.status},#{model.createTime},#{model.communityID},#{model.regionalID},#{model.heatingArea},#{model.mapX},#{model.mapY},#{model.communityType},#{model.communityAddress},#{model.houseHoldCount},#{model.remark})
     </insert>
 
 
     <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
-        SELECT count(*) FROM Community WHERE `Status`!=3
-        <if test="name!=''">
-            and `Name` LIKE '%${name}%'
+        SELECT count(*) FROM Community com LEFT JOIN HeatExchangeStation hes ON com.`StationID`=hes.`id`
+        LEFT JOIN Company company ON hes.`CompanyID`=company.`id`
+        WHERE com.`Status`!=3
+        <if test="companyID!=-1">
+            AND company.`id`=#{companyID}
         </if>
         <if test="stationID!=-1">
-            and stationID=#{stationID}
+            AND com.`StationID`=#{stationID}
         </if>
+        <if test="name!=''">
+            AND com.`Name` LIKE '%${name}%'
+        </if>
+    </select>
+
+    <select id="getByName" resultType="com.fastrun.TempCollection.model.Community">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM Community WHERE `Status` != 3 AND `StationID` = #{stationID} AND `Name` = #{name}
     </select>
 </mapper>

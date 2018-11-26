@@ -224,7 +224,7 @@ var stationJson = '';
 function bindCompany() {
     //绑定分公司
     var _companyService = app.createService('company');
-    _companyService.getAll({"searchParentID": -2}, {"page": 1, "pagesize": 20}, function (data) {
+    _companyService.getAll({"searchParentID": -2}, {"page": 1, "pagesize": 999}, function (data) {
         var parentCompany = JSON.parse(data);
         if (parentCompany.Rows.length > 0) {
             $("#searchCompanyID").empty();

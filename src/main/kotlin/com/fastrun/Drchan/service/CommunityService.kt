@@ -2,6 +2,7 @@ package com.fastrun.TempCollection.service
 
 import com.fastrun.TempCollection.model.Community
 
+
 interface CommunityService {
 
     fun insert(model: Community): Int?
@@ -15,7 +16,7 @@ interface CommunityService {
     /*
     * 获取记录数
     * */
-    fun getCount(name: String, stationID: Int): Int?
+    fun getCount(name: String, companyID: Int, stationID: Int): Int?
 
     /*
     * 分页函数
@@ -25,7 +26,9 @@ interface CommunityService {
     * pageSize：页容量
     * orderBy：排序条件
     * */
-    fun getPaging(name: String, stationID: Int, offset: Int, pageSize: Int, orderBy: String): List<Community>?
+    fun getPaging(name: String, companyID: Int, stationID: Int, offset: Int, pageSize: Int, orderBy: String): List<Community>?
 
+
+    fun getByName(name: String, stationID: Int): Community?
 
 }

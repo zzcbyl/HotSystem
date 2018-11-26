@@ -9,16 +9,16 @@ interface AccountHistoryMapper {
 
     fun insert(@Param("model") model: AccountHistory): Int
 
-    fun update(@Param("model") model: AccountHistory):Int
+    fun update(@Param("model") model: AccountHistory): Int
 
-    fun delete(@Param("id") id:Int): Int
+    fun delete(@Param("id") id: Int): Int
 
-    fun get(@Param("id") id:Int): AccountHistory
+    fun get(@Param("id") id: Int): AccountHistory
 
     /*
     * 获取记录数
     * */
-    fun getCount(@Param("userId") userId:Long,@Param("type") type:Int):Int
+    fun getCount(@Param("userId") userId: Long, @Param("type") type: Int): Int
 
     /*
     * 分页函数
@@ -28,7 +28,7 @@ interface AccountHistoryMapper {
     * pageSize：页容量
     * orderBy：排序条件
     * */
-    fun getPaging(@Param("userId") userId:Long,@Param("type") type:Int,@Param("offset") offset:Int,@Param("pageSize") pageSize:Int,@Param("orderBy") orderBy:String): List<AccountHistory>
+    fun getPaging(@Param("userId") userId: Long, @Param("type") type: Int, @Param("offset") offset: Int, @Param("pageSize") pageSize: Int, @Param("orderBy") orderBy: String): List<AccountHistory>
 
 
 }

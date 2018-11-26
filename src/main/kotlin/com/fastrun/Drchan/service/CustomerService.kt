@@ -1,22 +1,22 @@
 package com.fastrun.TempCollection.service
 
 import com.fastrun.TempCollection.model.Customer
-import org.apache.ibatis.annotations.Param
+
 
 interface CustomerService {
 
     fun insert(model: Customer): Int?
 
-    fun update(model:Customer):Int?
+    fun update(model: Customer): Int?
 
-    fun delete(id:Int): Int?
+    fun delete(id: Int): Int?
 
-    fun get(id:Int):Customer?
+    fun get(id: Int): Customer?
 
     /*
     * 获取记录数
     * */
-    fun getCount():Int?
+    fun getCount(name: String, phoneNumber: String, cID: String): Int?
 
     /*
     * 分页函数
@@ -26,6 +26,9 @@ interface CustomerService {
     * pageSize：页容量
     * orderBy：排序条件
     * */
-    fun getPaging(offset:Int,pageSize:Int,orderBy:String): List<Customer>?
+    fun getPaging(name: String, phoneNumber: String, cID: String, offset: Int, pageSize: Int, orderBy: String): List<Customer>?
 
+    fun getLast(): Customer?
+
+    fun getByName(name: String, phoneNumber: String): Customer?
 }

@@ -13,30 +13,58 @@
         <result column="longi1" property="longi1"/>
         <result column="Lati2" property="lati2"/>
         <result column="longi2" property="longi2"/>
+        <result column="FloorNumber" property="floorNumber"/>
         <result column="Height" property="height"/>
         <result column="Status" property="status"/>
         <result column="CreaterID" property="createrID"/>
         <result column="CreateTime" property="createTime"/>
+
+        <result column="BuildingID" property="buildingID"/>
+        <result column="CrewID" property="crewID"/>
+        <result column="HeatingArea" property="heatingArea"/>
+        <result column="BuildYear" property="buildYear"/>
+        <result column="BuildingStructure" property="buildingStructure"/>
+        <result column="IsEnergySaving" property="energySaving"/>
+        <result column="IsMeasure" property="measure"/>
+        <result column="IsSeparateControl" property="separateControl"/>
+        <result column="EnergyConsumptionType" property="energyConsumptionType"/>
+        <result column="NgasstandardID" property="ngasstandardID"/>
+        <result column="BuildingType" property="buildingType"/>
+        <result column="IsHeatMeteringTransformed" property="heatMeteringTransformed"/>
+        <result column="HeatMeteringDate" property="heatMeteringDate"/>
+        <result column="IsWallinSulationTransformed" property="wallinSulationTransformed"/>
+        <result column="WallinSulationDate" property="wallinSulationDate"/>
+        <result column="Address" property="address"/>
+        <result column="Remark" property="remark"/>
+        <result column="UpdateTime" property="updateTime"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-      `id`,`Name`,`BuildingNo`,`CommunityID`,`StationID`,`Lati1`,`longi1`,`Lati2`,`longi2`,`Height`,`Status`,`CreaterID`,`CreateTime`
+        `id`,`Name`,`BuildingNo`,`CommunityID`,`StationID`,`Lati1`,`longi1`,`Lati2`,`longi2`,`FloorNumber`,`Height`,`Status`,`CreaterID`,`CreateTime`,`BuildingID`,`CrewID`,`HeatingArea`,`BuildYear`,`BuildingStructure`,`IsEnergySaving`,`IsMeasure`,`IsSeparateControl`,`EnergyConsumptionType`,`NgasstandardID`,`BuildingType`,`IsHeatMeteringTransformed`,`HeatMeteringDate`,`IsWallinSulationTransformed`,`WallinSulationDate`,`Address`,`Remark`,`UpdateTime`
     </sql>
 
-    <select id="getPaging" resultType="com.fastrun.TempCollection.model.Building" resultMap="buildingMap">
+    <select id="getPaging" resultType="com.fastrun.TempCollection.model.Building">
         SELECT
-        bui.`id`,bui.`Name`,bui.`BuildingNo`,bui.`CommunityID`,bui.`StationID`,bui.`Lati1`,bui.`longi1`,bui.`Lati2`,bui.`longi2`,bui.`Height`,bui.`Status`,bui.`CreaterID`,bui.`CreateTime`,hes.`Name`
-        AS stationName, com.`Name` AS communityName
-        FROM Building bui LEFT JOIN heatexchangestation hes ON bui.`StationID`=hes.`id` LEFT JOIN community com ON
-        bui.`CommunityID`=com.`id` WHERE bui.`Status` != 3
-        <if test="name!=''">
-            and bui.`Name` LIKE '%${name}%'
+        bui.`id`,bui.`Name`,bui.`BuildingNo`,bui.`CommunityID`,bui.`StationID`,bui.`Lati1`,bui.`longi1`,bui.`Lati2`,bui.`longi2`,bui.`FloorNumber`,bui.`Height`,bui.`Status`,bui.`CreaterID`,bui.`CreateTime`,
+        bui.`BuildingID`,`CrewID`,bui.`HeatingArea`,`BuildYear`,`BuildingStructure`,`IsEnergySaving` AS energySaving,`IsMeasure` AS measure,`IsSeparateControl` AS separateControl,`EnergyConsumptionType`,`NgasstandardID`,`BuildingType`,
+        `IsHeatMeteringTransformed` AS heatMeteringTransformed,`HeatMeteringDate`,`IsWallinSulationTransformed` AS wallinSulationTransformed,`WallinSulationDate`,bui.`Address`,bui.`Remark`,bui.`UpdateTime`,
+        hes.`Name` AS stationName, com.`Name` AS communityName, company.`id` AS companyID, company.`Name` AS companyName
+        FROM Building bui
+        LEFT JOIN HeatExchangeStation hes ON bui.`StationID`=hes.`id`
+        LEFT JOIN Community com ON bui.`CommunityID`=com.`id`
+        LEFT JOIN Company company ON hes.`CompanyID`=company.`id`
+        WHERE bui.`Status` != 3
+        <if test="companyID!=-1">
+            and hes.`CompanyID`=#{companyID}
         </if>
         <if test="stationID!=-1">
-            and bui.stationID=#{stationID}
+            and bui.`StationID`=#{stationID}
         </if>
         <if test="communityID!=-1">
-            and bui.communityID=#{communityID}
+            and bui.`CommunityID`=#{communityID}
+        </if>
+        <if test="name!=''">
+            and bui.`Name` LIKE '%${name}%'
         </if>
         order by ${orderBy} limit #{offset},#{pageSize}
     </select>
@@ -77,6 +105,9 @@
             <if test="model.longi2!=null">
                 `longi2`=#{model.longi2},
             </if>
+            <if test="model.floorNumber!=null">
+                `FloorNumber`=#{model.floorNumber},
+            </if>
             <if test="model.height!=null">
                 `Height`=#{model.height},
             </if>
@@ -89,13 +120,67 @@
             <if test="model.createTime!=null">
                 `CreateTime`=#{model.createTime},
             </if>
+            <if test="model.buildingID!=null">
+                `BuildingID`=#{model.buildingID},
+            </if>
+            <if test="model.crewID!=null">
+                `CrewID`=#{model.crewID},
+            </if>
+            <if test="model.heatingArea!=null">
+                `HeatingArea`=#{model.heatingArea},
+            </if>
+            <if test="model.buildYear!=null">
+                `BuildYear`=#{model.buildYear},
+            </if>
+            <if test="model.buildingStructure!=null">
+                `BuildingStructure`=#{model.buildingStructure},
+            </if>
+            <if test="model.energySaving!=null">
+                `IsEnergySaving`=#{model.energySaving},
+            </if>
+            <if test="model.measure!=null">
+                `IsMeasure`=#{model.measure},
+            </if>
+            <if test="model.separateControl!=null">
+                `IsSeparateControl`=#{model.separateControl},
+            </if>
+            <if test="model.energyConsumptionType!=null">
+                `EnergyConsumptionType`=#{model.energyConsumptionType},
+            </if>
+            <if test="model.ngasstandardID!=null">
+                `NgasstandardID`=#{model.ngasstandardID},
+            </if>
+            <if test="model.buildingType!=null">
+                `BuildingType`=#{model.buildingType},
+            </if>
+            <if test="model.heatMeteringTransformed!=null">
+                `IsHeatMeteringTransformed`=#{model.heatMeteringTransformed},
+            </if>
+            <if test="model.heatMeteringDate!=null">
+                `HeatMeteringDate`=#{model.heatMeteringDate},
+            </if>
+            <if test="model.wallinSulationTransformed!=null">
+                `IsWallinSulationTransformed`=#{model.wallinSulationTransformed},
+            </if>
+            <if test="model.wallinSulationDate!=null">
+                `WallinSulationDate`=#{model.wallinSulationDate},
+            </if>
+            <if test="model.address!=null">
+                `Address`=#{model.address},
+            </if>
+            <if test="model.remark!=null">
+                `Remark`=#{model.remark},
+            </if>
+            <if test="model.updateTime!=null">
+                `UpdateTime`=#{model.updateTime},
+            </if>
         </set>
         WHERE id=#{model.id}
     </update>
 
     <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
             timeout="20">
-        update Building set status=3 WHERE id=#{id}
+        update Building set Status=3 WHERE id=#{id}
     </update>
 
     <insert id="insert" parameterType="com.fastrun.TempCollection.model.Building"
@@ -105,20 +190,32 @@
             keyColumn=""
             useGeneratedKeys="true"
             timeout="20">
-        INSERT INTO Building(`Name`,`BuildingNo`,`CommunityID`,`StationID`,`Lati1`,`longi1`,`Lati2`,`longi2`,`Height`,`Status`,`CreaterID`,`CreateTime`) VALUES(#{model.name},#{model.buildingNo},#{model.communityID},#{model.stationID},#{model.lati1},#{model.longi1},#{model.lati2},#{model.longi2},#{model.height},#{model.status},#{model.createrID},#{model.createTime})
+        INSERT INTO Building(`Name`,`BuildingNo`,`CommunityID`,`StationID`,`Lati1`,`longi1`,`Lati2`,`longi2`,`FloorNumber`,`Height`,`Status`,`CreaterID`,`CreateTime`,`BuildingID`,`CrewID`,`HeatingArea`,`BuildYear`,`BuildingStructure`,`IsEnergySaving`,`IsMeasure`,`IsSeparateControl`,`EnergyConsumptionType`,`NgasstandardID`,`BuildingType`,`IsHeatMeteringTransformed`,`HeatMeteringDate`,`IsWallinSulationTransformed`,`WallinSulationDate`,`Address`,`Remark`)
+        VALUES(#{model.name},#{model.buildingNo},#{model.communityID},#{model.stationID},#{model.lati1},#{model.longi1},#{model.lati2},#{model.longi2},#{model.floorNumber},#{model.height},#{model.status},#{model.createrID},#{model.createTime},#{model.buildingID},#{model.crewID},#{model.heatingArea},#{model.buildYear},#{model.buildingStructure},#{model.energySaving},#{model.measure},#{model.separateControl},#{model.energyConsumptionType},#{model.ngasstandardID},#{model.buildingType},#{model.heatMeteringTransformed},#{model.heatMeteringDate},#{model.wallinSulationTransformed},#{model.wallinSulationDate},#{model.address},#{model.remark})
     </insert>
 
-
     <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
-        SELECT count(*) FROM Building WHERE `Status` != 3
-        <if test="name!=''">
-            and `Name` LIKE '%${name}%'
+        SELECT count(*) FROM Building bui LEFT JOIN HeatExchangeStation hes ON bui.`StationID`=hes.`id`
+        WHERE bui.`Status` != 3
+        <if test="companyID!=-1">
+            and hes.`CompanyID`=#{companyID}
         </if>
         <if test="stationID!=-1">
-            and stationID=#{stationID}
+            and bui.`StationID`=#{stationID}
         </if>
         <if test="communityID!=-1">
-            and communityID=#{communityID}
+            and bui.`CommunityID`=#{communityID}
+        </if>
+        <if test="name!=''">
+            and bui.`Name` LIKE '%${name}%'
         </if>
     </select>
+
+    <select id="getByName" resultType="com.fastrun.TempCollection.model.Building">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM Building WHERE `Status` != 3 AND `StationID` = #{stationID} AND `CommunityID` = #{communityID} AND `Name` =
+        #{name}
+    </select>
 </mapper>
+

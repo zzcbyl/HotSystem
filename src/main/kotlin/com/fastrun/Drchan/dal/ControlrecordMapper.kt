@@ -8,14 +8,14 @@ interface ControlrecordMapper {
 
     fun insert(@Param("model") model: Controlrecord): Int
 
-    fun update(@Param("model") model:Controlrecord):Int
-    
-    fun get(@Param("id") id:Int):Controlrecord
+    fun update(@Param("model") model: Controlrecord): Int
 
-    fun getPaging(@Param("offset") offset:Int,@Param("pageSize") pageSize:Int,@Param("orderBy") orderBy:String): List<Controlrecord>
+    fun get(@Param("id") id: Int): Controlrecord
 
-    fun getCount():Int
+    fun getPaging(@Param("offset") offset: Int, @Param("pageSize") pageSize: Int, @Param("orderBy") orderBy: String): List<Controlrecord>
 
-    fun delete(@Param("id") id:Int): Int
+    fun getCount(): Int
+
+    fun delete(@Param("id") id: Int): Int
 
 }

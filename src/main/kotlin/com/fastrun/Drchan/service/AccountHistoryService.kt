@@ -1,24 +1,21 @@
 package com.fastrun.TempCollection.service
 
 import com.fastrun.TempCollection.model.AccountHistory
-import com.fastrun.TempCollection.model.User
-import com.fastrun.TempCollection.model.UserPart
-import org.apache.ibatis.annotations.Param
 
 interface AccountHistoryService {
 
     fun insert(model: AccountHistory): Int?
 
-    fun update(model:AccountHistory):Int?
+    fun update(model: AccountHistory): Int?
 
-    fun delete(id:Int): Int?
+    fun delete(id: Int): Int?
 
-    fun get(id:Int):AccountHistory?
+    fun get(id: Int): AccountHistory?
 
     /*
     * 获取记录数
     * */
-    fun getCount(userId:Long,type:Int):Int?
+    fun getCount(userId: Long, type: Int): Int?
 
     /*
     * 分页函数
@@ -28,6 +25,6 @@ interface AccountHistoryService {
     * pageSize：页容量
     * orderBy：排序条件
     * */
-    fun getPaging(userId:Long,type:Int, offset:Int,pageSize:Int,orderBy:String): List<AccountHistory>?
+    fun getPaging(userId: Long, type: Int, offset: Int, pageSize: Int, orderBy: String): List<AccountHistory>?
 
 }

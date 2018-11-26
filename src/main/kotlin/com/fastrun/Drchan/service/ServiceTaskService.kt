@@ -1,22 +1,21 @@
 package com.fastrun.TempCollection.service
 
 import com.fastrun.TempCollection.model.ServiceTask
-import org.apache.ibatis.annotations.Param
 
 interface ServiceTaskService {
 
     fun insert(model: ServiceTask): Int?
 
-    fun update(model:ServiceTask):Int?
+    fun update(model: ServiceTask): Int?
 
-    fun delete(id:Int): Int?
+    fun delete(id: Int): Int?
 
-    fun get(id:Int):ServiceTask?
+    fun get(id: Int): ServiceTask?
 
     /*
     * 获取记录数
     * */
-    fun getCount(userId:Int):Int?
+    fun getCount(userId: Int): Int?
 
     /*
     * 分页函数
@@ -26,6 +25,6 @@ interface ServiceTaskService {
     * pageSize：页容量
     * orderBy：排序条件
     * */
-    fun getPaging(userId:Int,offset:Int,pageSize:Int,orderBy:String): List<ServiceTask>?
+    fun getPaging(userId: Int, offset: Int, pageSize: Int, orderBy: String): List<ServiceTask>?
 
 }

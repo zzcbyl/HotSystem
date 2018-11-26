@@ -1,12 +1,11 @@
 package com.fastrun.TempCollection.service
 
+import com.fastrun.TempCollection.dal.BuildingMapper
 import com.fastrun.TempCollection.model.Building
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import javax.annotation.Resource
-import com.fastrun.TempCollection.dal.BuildingMapper
-import org.apache.ibatis.annotations.Param
 
 @Service
 class BuildingServiceImpl : BuildingService {
@@ -29,13 +28,13 @@ class BuildingServiceImpl : BuildingService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    override fun getPaging(name: String, stationID: Int, communityID: Int, offset: Int, pageSize: Int, orderBy: String): List<Building>? {
-        return buildingRepository?.getPaging(name, stationID, communityID, offset, pageSize, orderBy)
+    override fun getPaging(name: String, companyID: Int, stationID: Int, communityID: Int, offset: Int, pageSize: Int, orderBy: String): List<Building>? {
+        return buildingRepository?.getPaging(name, companyID, stationID, communityID, offset, pageSize, orderBy)
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
-    override fun getCount(name: String, stationID: Int, communityID: Int): Int? {
-        return buildingRepository?.getCount(name, stationID, communityID)
+    override fun getCount(name: String, companyID: Int, stationID: Int, communityID: Int): Int? {
+        return buildingRepository?.getCount(name, companyID, stationID, communityID)
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -43,5 +42,9 @@ class BuildingServiceImpl : BuildingService {
         return buildingRepository?.delete(id)
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS)
+    override fun getByName(name: String, stationID: Int, communityID: Int): Building? {
+        return buildingRepository?.getByName(name, stationID, communityID)
+    }
 }
 

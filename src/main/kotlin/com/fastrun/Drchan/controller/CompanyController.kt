@@ -1,17 +1,14 @@
 package com.fastrun.TempCollection.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.springframework.stereotype.Controller
-import org.springframework.web.servlet.ModelAndView
-import javax.annotation.Resource
-import com.fastrun.TempCollection.model.Company
-import org.springframework.web.bind.annotation.*
-import java.util.HashMap
-import com.fastrun.TempCollection.service.CompanyService
 import com.fastrun.TempCollection.ResponseData
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.bind.annotation.PostMapping
+import com.fastrun.TempCollection.model.Company
+import com.fastrun.TempCollection.service.CompanyService
+import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.ModelAndView
+import java.util.*
+import javax.annotation.Resource
 
 
 @RequestMapping("/admin/company/")
@@ -62,10 +59,10 @@ class CompanyController {
                   @RequestParam(name = "page", defaultValue = "1", required = true) offset: Int,
                   @RequestParam(name = "pagesize", defaultValue = "20", required = true) pageSize: Int,
                   @RequestParam(name = "sortname", defaultValue = "id", required = false) sortname: String,
-                  @RequestParam(name = "sortorder", defaultValue = "asc", required = false) sortorder: String): String {
+                  @RequestParam(name = "sortorder", defaultValue = "desc", required = false) sortorder: String): String {
 
         var orderBy = sortname + " " + sortorder;
-        var items = _service?.getPaging(name, parentID, offset - 1, pageSize, orderBy)
+        var items = _service?.getPaging(name, parentID, (offset - 1) * pageSize, pageSize, orderBy)
         var counts = _service?.getCount(name, parentID)
 
         val jsonMap = HashMap<String, Any>()

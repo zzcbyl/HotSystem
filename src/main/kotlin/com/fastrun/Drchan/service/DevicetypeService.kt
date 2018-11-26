@@ -1,22 +1,21 @@
 package com.fastrun.TempCollection.service
 
 import com.fastrun.TempCollection.model.Devicetype
-import org.apache.ibatis.annotations.Param
 
 interface DevicetypeService {
 
     fun insert(model: Devicetype): Int?
 
-    fun update(model:Devicetype):Int?
+    fun update(model: Devicetype): Int?
 
-    fun delete(id:Int): Int?
+    fun delete(id: Int): Int?
 
-    fun get(id:Int):Devicetype?
+    fun get(id: Int): Devicetype?
 
     /*
     * 获取记录数
     * */
-    fun getCount():Int?
+    fun getCount(): Int?
 
     /*
     * 分页函数
@@ -26,6 +25,6 @@ interface DevicetypeService {
     * pageSize：页容量
     * orderBy：排序条件
     * */
-    fun getPaging(offset:Int,pageSize:Int,orderBy:String): List<Devicetype>?
+    fun getPaging(offset: Int, pageSize: Int, orderBy: String): List<Devicetype>?
 
 }

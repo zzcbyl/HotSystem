@@ -70,6 +70,7 @@
                                             <label>换热机组编号<span class="required">  </span></label>
                                             <input style="width:230px; display: inline;" class="maxlength-handler form-control edited"
                                                    type="text" name="unitNumber" value="" required maxlength="500"/>
+                                            <span id="nameError" class="errorMessage"></span>
                                         </div>
 
                                         <div class="form-group form-md-line-input form-md-floating-label">

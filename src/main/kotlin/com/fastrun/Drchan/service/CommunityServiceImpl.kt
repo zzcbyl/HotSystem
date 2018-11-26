@@ -1,12 +1,11 @@
 package com.fastrun.TempCollection.service
 
+import com.fastrun.TempCollection.dal.CommunityMapper
 import com.fastrun.TempCollection.model.Community
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import javax.annotation.Resource
-import com.fastrun.TempCollection.dal.CommunityMapper
-import org.apache.ibatis.annotations.Param
 
 @Service
 class CommunityServiceImpl : CommunityService {
@@ -29,13 +28,13 @@ class CommunityServiceImpl : CommunityService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    override fun getPaging(name: String, stationID: Int, offset: Int, pageSize: Int, orderBy: String): List<Community>? {
-        return communityRepository?.getPaging(name, stationID, offset, pageSize, orderBy)
+    override fun getPaging(name: String, companyID: Int, stationID: Int, offset: Int, pageSize: Int, orderBy: String): List<Community>? {
+        return communityRepository?.getPaging(name, companyID, stationID, offset, pageSize, orderBy)
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
-    override fun getCount(name: String, stationID: Int): Int? {
-        return communityRepository?.getCount(name, stationID)
+    override fun getCount(name: String, companyID: Int, stationID: Int): Int? {
+        return communityRepository?.getCount(name, companyID, stationID)
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -43,5 +42,8 @@ class CommunityServiceImpl : CommunityService {
         return communityRepository?.delete(id)
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS)
+    override fun getByName(name: String, stationID: Int): Community? {
+        return communityRepository?.getByName(name, stationID)
+    }
 }
-
