@@ -1,6 +1,8 @@
 package com.fastrun.TempCollection.service
 
 import com.fastrun.TempCollection.model.Temprature
+import java.util.*
+
 
 interface TempratureService {
 
@@ -12,19 +14,12 @@ interface TempratureService {
 
     fun get(id: Int): Temprature?
 
-    /*
-    * 获取记录数
-    * */
-    fun getCount(): Int?
+    fun getCount(positionID: Int, deviceSN: String, companyID: Int, stationID: Int, communityID: Int, buildingID: Int,  customerName: String,  phoneNumber: String, minTemp: Int, maxTemp: Int): Int?
 
-    /*
-    * 分页函数
-    * userID：用户ID
-    * type：消费类型（0：充值，1：消费）
-    * offset：起始记录位置
-    * pageSize：页容量
-    * orderBy：排序条件
-    * */
-    fun getPaging(offset: Int, pageSize: Int, orderBy: String): List<Temprature>?
+    fun getPaging(positionID: Int,  deviceSN: String, companyID: Int, stationID: Int, communityID: Int, buildingID: Int,  customerName: String,  phoneNumber: String, minTemp: Int, maxTemp: Int, offset: Int, pageSize: Int, orderBy: String): List<Temprature>?
+
+    fun getPaging(deviceID: Int, positionID: Int, beginDate: Date, endDate: Date, offset: Int, pageSize: Int, orderBy: String): List<Temprature>?
+
+    fun getCount(deviceID: Int, positionID: Int,  beginDate: Date,  endDate: Date): Int?
 
 }

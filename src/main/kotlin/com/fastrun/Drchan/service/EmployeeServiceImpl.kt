@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import javax.annotation.Resource
 
+
 @Service
 class EmployeeServiceImpl : EmployeeService {
     @Resource
@@ -50,6 +51,16 @@ class EmployeeServiceImpl : EmployeeService {
     @Transactional(propagation = Propagation.REQUIRED)
     override fun resetPassword(id: Int, newPassword: String): Int? {
         return employeeRepository?.resetPassword(id, newPassword)
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    override fun changPassword(id: Int, password: String): Int? {
+        return employeeRepository?.changPassword(id, password)
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    override fun getByName(account: String): Employee? {
+        return employeeRepository?.getByName(account)
     }
 }
 

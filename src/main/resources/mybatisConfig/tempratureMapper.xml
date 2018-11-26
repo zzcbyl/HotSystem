@@ -4,30 +4,108 @@
 <mapper namespace="com.fastrun.TempCollection.dal.TempratureMapper">
 
     <resultMap type="com.fastrun.TempCollection.model.Temprature" id="tempratureMap">
-                  <id column="id" property="id" />
-         <result column="DeviceSN" property="deviceSN" />
-         <result column="DeviceID" property="deviceID" />
-         <result column="Level" property="level" />
-         <result column="Temp1" property="temp1" />
-         <result column="Temp2" property="temp2" />
-         <result column="StatusCode" property="statusCode" />
-         <result column="AddTime" property="addTime" />
+        <id column="id" property="id"/>
+        <result column="DeviceSN" property="deviceSN"/>
+        <result column="DeviceID" property="deviceID"/>
+        <result column="Level" property="level"/>
+        <result column="Temp1" property="temp1"/>
+        <result column="Temp2" property="temp2"/>
+        <result column="StatusCode" property="statusCode"/>
+        <result column="AddTime" property="addTime"/>
+        <result column="PositionID" property="positionID"/>
     </resultMap>
-    
+
     <sql id="Base_Column_List">
-      `id`,`DeviceSN`,`DeviceID`,`Level`,`Temp1`,`Temp2`,`StatusCode`,`AddTime`
+        `id`,`DeviceSN`,`DeviceID`,`Level`,`Temp1`,`Temp2`,`StatusCode`,`AddTime`,`PositionID`
     </sql>
-  
+
+    <!--var deviceInstalled: Int = 0, var deviceWorkState: Int = 0, var deviceStatus: Int = 0, var deviceCreateTime: Date = Date(),
+    var typeName: String = "", var customerID: Int = 0, var customerName: String = "", var phoneNumber: String = "", var positionID: Int = 0,
+    var subNumber: String = "", var floorNumber: String = "", var apartNumber: String = "", var roomName: String = "",
+    var buildingID: Int = 0, var buildingName: String = "", var buildingNo: String = "", var communityID: Int = 0, var communityName: String = "",
+    var hesID: Int = 0, var hesName: String = "", var companyID: Int = 0, var companyName: String = ""
+-->
     <select id="getPaging" resultType="com.fastrun.TempCollection.model.Temprature" resultMap="tempratureMap">
-       SELECT
-        <include refid="Base_Column_List" />
-       FROM Temprature
-       order by ${orderBy} limit #{offset},#{pageSize}
+        SELECT
+        t.`id`,t.`DeviceSN`,t.`DeviceID`,t.`Level`,t.`Temp1`,t.`Temp2`,t.`StatusCode`,t.`AddTime`,t.`PositionID`,
+        c.`id` AS customerID, c.`Name` AS customerName, c.`PhoneNumber` AS phoneNumber, p.`SubNumber` AS
+        subNumber,p.`FloorNumber` AS floorNumber,
+        p.`ApartNumber` AS apartNumber, p.`RoomName` AS roomName, p.`ExactPosition` AS exactPosition,
+        bui.`id` AS buildingID, bui.`Name` AS buildingName,bui.`BuildingNo` AS buildingNo,
+        com.`id` AS communityID, com.`Name` AS communityName, hes.`id` AS hesID, hes.`Name` AS hesName, company.`id` AS
+        companyID, company.`Name` AS companyName
+        FROM Temprature t
+        LEFT JOIN Position p ON p.`id` = t.PositionID
+        LEFT JOIN Customer c ON c.`id` = p.CustomerID
+        LEFT JOIN Building bui ON bui.`id` = p.BuildingID
+        LEFT JOIN Community com ON com.`id`=p.CommunityID
+        LEFT JOIN HeatExchangeStation hes ON hes.`id` = com.StationID
+        LEFT JOIN Company company ON company.`id`=hes.CompanyID
+        WHERE 1=1
+        <choose>
+            <when test="positionID!=-1">
+                and t.`PositionID` = #{positionID}
+            </when>
+            <otherwise>
+                and t.`PositionID` > 0
+            </otherwise>
+        </choose>
+        <!--<if test="positionID!=-1">
+            and t.`PositionID` = #{positionID}
+        </if>-->
+        <if test="deviceSN!=''">
+            and t.`DeviceSN` = #{deviceSN}
+        </if>
+        <if test="companyID!=-1">
+            and company.`id` = #{companyID}
+        </if>
+        <if test="stationID!=-1">
+            and hes.`id` = #{stationID}
+        </if>
+        <if test="communityID!=-1">
+            and com.`id` = #{communityID}
+        </if>
+        <if test="buildingID!=-1">
+            and bui.`id` = #{buildingID}
+        </if>
+        <if test="customerName!=''">
+            and c.`Name` LIKE '%${customerName}%'
+        </if>
+        <if test="phoneNumber!=''">
+            and c.`PhoneNumber` LIKE '%${phoneNumber}%'
+        </if>
+        <if test="minTemp!=0">
+            and t.`Temp1` &gt;= #{minTemp}
+        </if>
+        <if test="maxTemp!=0">
+            and t.`Temp1` &lt; #{maxTemp}
+        </if>
+
+        order by ${orderBy} limit #{offset},#{pageSize}
+    </select>
+
+    <select id="getPaging1" resultType="com.fastrun.TempCollection.model.Temprature" resultMap="tempratureMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM Temprature WHERE 1=1
+        <if test="deviceID!=-1">
+            AND `DeviceID` = #{deviceID}
+        </if>
+        <if test="positionID!=-1">
+            AND `PositionID` = #{positionID}
+        </if>
+        <if test="beginDate!=null">
+            AND `AddTime` >= #{beginDate}
+        </if>
+        <if test="endDate!=null">
+            AND `AddTime` &lt; #{endDate}
+        </if>
+        order by ${orderBy} limit #{offset},#{pageSize}
     </select>
 
     <select id="get" resultType="com.fastrun.TempCollection.model.Temprature" resultMap="tempratureMap">
         SELECT
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         FROM Temprature WHERE id=#{id}
     </select>
 
@@ -35,29 +113,32 @@
             flushCache="true"
             statementType="PREPARED"
             timeout="20">
-       Update Temprature
+        Update Temprature
         <set>
-                   <if test="model.deviceSN!=null">
-                           `DeviceSN`=#{model.deviceSN},
-                       </if>
-        <if test="model.deviceID!=null">
-                           `DeviceID`=#{model.deviceID},
-                       </if>
-        <if test="model.level!=null">
-                           `Level`=#{model.level},
-                       </if>
-        <if test="model.temp1!=null">
-                           `Temp1`=#{model.temp1},
-                       </if>
-        <if test="model.temp2!=null">
-                           `Temp2`=#{model.temp2},
-                       </if>
-        <if test="model.statusCode!=null">
-                           `StatusCode`=#{model.statusCode},
-                       </if>
-        <if test="model.addTime!=null">
-                           `AddTime`=#{model.addTime},
-                       </if>  
+            <if test="model.deviceSN!=null">
+                `DeviceSN`=#{model.deviceSN},
+            </if>
+            <if test="model.deviceID!=null">
+                `DeviceID`=#{model.deviceID},
+            </if>
+            <if test="model.level!=null">
+                `Level`=#{model.level},
+            </if>
+            <if test="model.temp1!=null">
+                `Temp1`=#{model.temp1},
+            </if>
+            <if test="model.temp2!=null">
+                `Temp2`=#{model.temp2},
+            </if>
+            <if test="model.statusCode!=null">
+                `StatusCode`=#{model.statusCode},
+            </if>
+            <if test="model.addTime!=null">
+                `AddTime`=#{model.addTime},
+            </if>
+            <if test="model.positionID!=null">
+                `PositionID`=#{model.positionID}
+            </if>
         </set>
         WHERE id=#{model.id}
     </update>
@@ -74,17 +155,57 @@
             keyColumn=""
             useGeneratedKeys="true"
             timeout="20">
-        INSERT INTO Temprature(`DeviceSN`,`DeviceID`,`Level`,`Temp1`,`Temp2`,`StatusCode`,`AddTime`) VALUES(#{model.deviceSN},#{model.deviceID},#{model.level},#{model.temp1},#{model.temp2},#{model.statusCode},#{model.addTime})
+        INSERT INTO Temprature(`DeviceSN`,`DeviceID`,`Level`,`Temp1`,`Temp2`,`StatusCode`,`AddTime`,`PositionID`) VALUES(#{model.deviceSN},#{model.deviceID},#{model.level},#{model.temp1},#{model.temp2},#{model.statusCode},#{model.addTime},#{model.positionID})
     </insert>
 
 
     <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
-        SELECT count(*) FROM Temprature
-        <!--where>
-            <if test="realName!=null and realName!=''">
-                 realName like concat('%',#{realName},'%')
-            </if>
-            and state!=-1
-        </where-->
+        SELECT count(*) FROM Temprature t
+        LEFT JOIN Position p ON p.`id` = t.PositionID
+        LEFT JOIN Customer c ON c.`id` = p.CustomerID
+        LEFT JOIN Building bui ON bui.`id` = p.BuildingID
+        LEFT JOIN Community com ON com.`id`=p.CommunityID
+        LEFT JOIN HeatExchangeStation hes ON hes.`id` = com.StationID
+        LEFT JOIN Company company ON company.`id`=hes.CompanyID
+        WHERE 1=1
+        <if test="positionID!=-1">
+            and t.`PositionID` = #{positionID}
+        </if>
+        <if test="deviceSN!=''">
+            and t.`DeviceSN` = #{deviceSN}
+        </if>
+        <if test="companyID!=-1">
+            and company.`id` = #{companyID}
+        </if>
+        <if test="stationID!=-1">
+            and hes.`id` = #{stationID}
+        </if>
+        <if test="communityID!=-1">
+            and com.`id` = #{communityID}
+        </if>
+        <if test="buildingID!=-1">
+            and bui.`id` = #{buildingID}
+        </if>
+        <if test="customerName!=''">
+            and c.`Name` LIKE '%${customerName}%'
+        </if>
+        <if test="phoneNumber!=''">
+            and c.`PhoneNumber` LIKE '%${phoneNumber}%'
+        </if>
+    </select>
+    <select id="getCount1" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*) FROM Temprature WHERE 1=1
+        <if test="deviceID!=-1">
+            AND `DeviceID` = #{deviceID}
+        </if>
+        <if test="positionID!=-1">
+            AND `PositionID` = #{positionID}
+        </if>
+        <if test="beginDate!=null">
+            AND `AddTime` >= #{beginDate}
+        </if>
+        <if test="endDate!=null">
+            AND `AddTime` &lt; #{endDate}
+        </if>
     </select>
 </mapper>

@@ -2,6 +2,8 @@ package com.fastrun.TempCollection.service
 
 import com.fastrun.TempCollection.model.Employee
 
+
+
 interface EmployeeService {
 
     fun insert(model: Employee): Int?
@@ -30,4 +32,8 @@ interface EmployeeService {
     fun findByAccount(account: String): Employee?
 
     fun resetPassword(id: Int, newPassword: String): Int?
+
+    fun changPassword(id: Int, password: String): Int?
+
+    fun getByName(account: String): Employee?
 }

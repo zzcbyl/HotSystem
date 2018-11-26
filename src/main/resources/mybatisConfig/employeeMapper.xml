@@ -19,7 +19,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-      `id`,`Account`,`Password`,`Name1`,`Name2`,`StationID`,`CompanyID`,`Department`,`Privilege`,`Status`,`CreaterID`,`CreateTime`
+        `id`,`Account`,`Password`,`Name1`,`Name2`,`StationID`,`CompanyID`,`Department`,`Privilege`,`Status`,`CreaterID`,`CreateTime`
     </sql>
 
     <select id="getPaging" resultType="com.fastrun.TempCollection.model.Employee" resultMap="employeeMap">
@@ -27,15 +27,15 @@
         e.`id`,e.`Account`,e.`Password`,e.`Name1`,e.`Name2`,e.`StationID`,e.`CompanyID`,e.`Department`,e.`Privilege`,e.`Status`,e.`CreaterID`,e.`CreateTime`,concat_ws('',e.`Name1`,e.`Name2`)
         AS name,com.`Name` AS companyName,hes.`Name` AS stationName
         FROM Employee e LEFT JOIN Company com ON e.`CompanyID`=com.`id` LEFT JOIN HeatExchangeStation hes ON
-        e.`StationID`=hes.`id` WHERE e.`Status`!=3
-        <if test="account!=''">
-            and e.`Account` LIKE '%${account}%'
-        </if>
+        e.`StationID`=hes.`id` WHERE e.`Status`!=3 AND e.`id` > 1
         <if test="companyID!=-1">
             and e.`CompanyID` = #{companyID}
         </if>
         <if test="stationID!=-1">
             and e.`StationID` = #{stationID}
+        </if>
+        <if test="account!=''">
+            and e.`Account` LIKE '%${account}%'
         </if>
         order by ${orderBy} limit #{offset},#{pageSize}
     </select>
@@ -43,7 +43,7 @@
     <select id="get" resultType="com.fastrun.TempCollection.model.Employee" resultMap="employeeMap">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM Employee WHERE id=#{id}
+        FROM Employee WHERE `id`=#{id}
     </select>
 
     <update id="update" parameterType="com.fastrun.TempCollection.model.Employee"
@@ -91,7 +91,7 @@
 
     <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
             timeout="20">
-        update Employee set status=3 WHERE id=#{id}
+        update Employee set `Status`=3 WHERE id=#{id}
     </update>
 
     <insert id="insert" parameterType="com.fastrun.TempCollection.model.Employee"
@@ -106,31 +106,43 @@
 
 
     <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
-        SELECT count(*) FROM Employee WHERE `Status`!=3
-        <if test="account!=''">
-            and `Account` LIKE '%${account}%'
-        </if>
+        SELECT count(*) FROM `Employee` WHERE `Status`!=3 AND `id` > 1
         <if test="companyID!=-1">
             and `CompanyID` = #{companyID}
         </if>
         <if test="stationID!=-1">
             and `StationID` = #{stationID}
         </if>
-        <!--where>
-            <if test="realName!=null and realName!=''">
-                 realName like concat('%',#{realName},'%')
-            </if>
-            and status!=-1
-        </where-->
+        <if test="account!=''">
+            and `Account` LIKE '%${account}%'
+        </if>
     </select>
 
     <select id="findByAccount" parameterType="java.lang.String" resultMap="employeeMap">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM Employee WHERE status!=3 and account=#{account} limit 1
+        FROM `Employee` WHERE `Status`!=3 and `Account`=#{account} limit 1
     </select>
 
     <update id="resetPassword" flushCache="true" statementType="PREPARED" timeout="20">
-        Update Employee set `Password`=#{newPassword}  WHERE id=#{id}
+        Update `Employee` set `Password`=#{newPassword}  WHERE id=#{id}
     </update>
+
+    <update id="changPassword" flushCache="true"
+            statementType="PREPARED"
+            timeout="20">
+        Update `Employee`
+        <set>
+            `Password`=#{password}
+        </set>
+        <where>
+            `id`=#{id}
+        </where>
+    </update>
+
+    <select id="getByName" resultType="com.fastrun.TempCollection.model.Employee">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM `Employee` WHERE `Status` != 3 AND `Account` = #{account}
+    </select>
 </mapper>

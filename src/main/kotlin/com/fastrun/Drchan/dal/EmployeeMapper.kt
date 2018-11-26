@@ -1,7 +1,9 @@
 package com.fastrun.TempCollection.dal
 
 import com.fastrun.TempCollection.model.Employee
-import org.apache.ibatis.annotations.*
+import org.apache.ibatis.annotations.Mapper
+import org.apache.ibatis.annotations.Param
+
 
 @Mapper
 interface EmployeeMapper {
@@ -20,5 +22,9 @@ interface EmployeeMapper {
 
     fun findByAccount(@Param("account") account: String): Employee
 
-    fun resetPassword(@Param("id") id: Int, @Param("newPassword") newPassword: String): Int?
+    fun resetPassword(@Param("id") id: Int, @Param("newPassword") newPassword: String): Int
+
+    fun changPassword(@Param("id") id: Int, @Param("password") password: String): Int
+
+    fun getByName(@Param("account") account: String): Employee
 }

@@ -1,19 +1,17 @@
 package com.fastrun.TempCollection.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fastrun.Drchan.common.MD5Encrpyt
+import com.fastrun.TempCollection.ResponseData
+import com.fastrun.TempCollection.common.AESEncoder
+import com.fastrun.TempCollection.model.Employee
+import com.fastrun.TempCollection.service.EmployeeService
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
 import java.util.*
 import javax.annotation.Resource
-import com.fastrun.TempCollection.ResponseData
-import com.fastrun.TempCollection.auth.Audience
-import com.fastrun.TempCollection.auth.JwtHelper
-import com.fastrun.TempCollection.common.AESEncoder
-import com.fastrun.TempCollection.common.Encode
-import com.fastrun.TempCollection.model.Employee
-import com.fastrun.TempCollection.service.EmployeeService
-import org.springframework.web.bind.annotation.*
-import java.util.HashMap
+
 
 @RequestMapping("/admin/employee/")
 @Controller
@@ -34,6 +32,12 @@ class EmployeeController {
     @ResponseBody
     fun create(@RequestBody model: Employee): ResponseData {
         val re = ResponseData()
+        val employee = employService?.getByName(model.account)
+        if (employee != null && employee.id > 0) {
+            re.putDataValue("result", 0)
+            re.putDataValue("message", "账号已存在")
+            return re
+        }
         model.password = AESEncoder.AESEncode(AESEncoder.salt, model.password).toString();
         var result = employService?.insert(model)
         re.putDataValue("result", result)
@@ -44,6 +48,12 @@ class EmployeeController {
     @ResponseBody
     fun update(@RequestBody model: Employee): ResponseData {
         val re = ResponseData()
+        val employee = employService?.getByName(model.account)
+        if (employee != null && employee.id > 0 && employee.id != model.id) {
+            re.putDataValue("result", 0)
+            re.putDataValue("message", "账号已存在")
+            return re
+        }
         var result = employService?.update(model)
         re.putDataValue("result", result)
         return re;
@@ -102,6 +112,47 @@ class EmployeeController {
         var result = employService?.resetPassword(model.id, newPassword)
         re.putDataValue("result", result)
         return re;
+    }
+
+    @GetMapping("changePassword")
+    @ResponseBody
+    fun changePassword(): ModelAndView {
+        return ModelAndView("/admin/employee/changePassword")
+    }
+
+    @PostMapping("changePassword")
+    @ResponseBody
+    fun changePasswordPost(@RequestParam id: Int, @RequestParam orgPassword: String, @RequestParam newPassword: String): ResponseData {
+        val res = ResponseData()
+        val user = employService?.get(id)
+        val orgPwd = MD5Encrpyt.MD5Encode(orgPassword)
+        if (user == null || orgPwd != user.password) {
+            res.putDataValue("Result", "error")
+            res.putDataValue("Message", "原密码错误")
+            return res;
+        }
+        var pwdNew = MD5Encrpyt.MD5Encode(newPassword).toString()
+        var result = employService?.changPassword(id, pwdNew)
+        res.putDataValue("Result", "OK");
+        res.putDataValue("Message", result);
+        return res;
+    }
+
+    @PostMapping("getByName")
+    @ResponseBody
+    fun getByName(@RequestParam(name = "name", required = true) account: String,
+                  @RequestParam(name = "id", defaultValue = "0", required = false) id: Int): ResponseData {
+        val re = ResponseData()
+        val employee = employService?.getByName(account)
+        if (employee != null && employee.id > 0)
+            if (id === 0) {
+                re.putDataValue("result", 0)
+                re.putDataValue("message", "账号已存在")
+            } else if (employee.id != id) {
+                re.putDataValue("result", 0)
+                re.putDataValue("message", "账号已存在")
+            }
+        return re
     }
 }
 
