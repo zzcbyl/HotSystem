@@ -15,7 +15,7 @@ interface ControllistService {
     /*
     * 获取记录数
     * */
-    fun getCount(): Int?
+    fun getCount(remoteCode: String, executeStatus: Int): Int?
 
     /*
     * 分页函数
@@ -25,6 +25,6 @@ interface ControllistService {
     * pageSize：页容量
     * orderBy：排序条件
     * */
-    fun getPaging(offset: Int, pageSize: Int, orderBy: String): List<Controllist>?
+    fun getPaging(remoteCode: String, executeStatus: Int, offset: Int, pageSize: Int, orderBy: String): List<Controllist>?
 
 }

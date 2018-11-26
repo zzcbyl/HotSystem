@@ -1,15 +1,14 @@
 package com.fastrun.TempCollection.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.springframework.stereotype.Controller
-import org.springframework.web.servlet.ModelAndView
-import java.util.*
-import javax.annotation.Resource
 import com.fastrun.TempCollection.ResponseData
 import com.fastrun.TempCollection.model.Alarmconfig
 import com.fastrun.TempCollection.service.AlarmconfigService
+import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
-import java.util.HashMap
+import org.springframework.web.servlet.ModelAndView
+import java.util.*
+import javax.annotation.Resource
 
 @RequestMapping("/admin/alarmconfig/")
 @Controller
@@ -54,14 +53,17 @@ class AlarmconfigController {
 
     @PostMapping("getPaging")
     @ResponseBody
-    fun getPaging(@RequestParam(name = "jtStartIndex", defaultValue = "0", required = true) offset: Int, @RequestParam(name = "jtPageSize") pageSize: Int, @RequestParam(name = "jtSorting", defaultValue = "id desc", required = false) orderBy: String): String {
-        var items = _service?.getPaging(offset, pageSize, orderBy)
+    fun getPaging(@RequestParam(name = "page", defaultValue = "1", required = true) offset: Int,
+                  @RequestParam(name = "pagesize", defaultValue = "20", required = true) pageSize: Int,
+                  @RequestParam(name = "sortname", defaultValue = "id", required = false) sortname: String,
+                  @RequestParam(name = "sortorder", defaultValue = "desc", required = false) sortorder: String): String {
+        val orderBy = "$sortname $sortorder"
+        var items = _service?.getPaging(offset - 1, pageSize, orderBy)
         var counts = _service?.getCount()
 
         val jsonMap = HashMap<String, Any>()
-        jsonMap["Result"] = "OK"
-        jsonMap["Records"] = items!!
-        jsonMap["TotalRecordCount"] = counts!!
+        jsonMap["Rows"] = items!!
+        jsonMap["Total"] = counts!!
         val mapper = ObjectMapper()
         var result = mapper.writeValueAsString(jsonMap)
         return result

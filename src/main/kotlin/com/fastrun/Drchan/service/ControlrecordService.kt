@@ -15,7 +15,7 @@ interface ControlrecordService {
     /*
     * 获取记录数
     * */
-    fun getCount(): Int?
+    fun getCount(controlID: Int): Int?
 
     /*
     * 分页函数
@@ -25,6 +25,7 @@ interface ControlrecordService {
     * pageSize：页容量
     * orderBy：排序条件
     * */
-    fun getPaging(offset: Int, pageSize: Int, orderBy: String): List<Controlrecord>?
+    fun getPaging(controlID: Int, offset: Int, pageSize: Int, orderBy: String): List<Controlrecord>?
 
+    fun deleteByControlID(controlID: Int): Int?
 }

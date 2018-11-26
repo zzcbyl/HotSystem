@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastrun.TempCollection.dal.CommandlistMapper">
+
+    <resultMap type="com.fastrun.TempCollection.model.Commandlist" id="commandlistMap">
+        <id column="id" property="id" />
+        <result column="Name" property="name" />
+        <result column="Code" property="code" />
+        <result column="Note" property="note" />
+        <result column="DeviceColumn" property="deviceColumn" />
+        <result column="Status" property="status" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `id`,`Name`,`Code`,`Note`,`DeviceColumn`,`Status`
+    </sql>
+
+    <select id="getPaging" resultType="com.fastrun.TempCollection.model.Commandlist" resultMap="commandlistMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM CommandList
+        order by ${orderBy} limit #{offset},#{pageSize}
+    </select>
+
+    <select id="get" resultType="com.fastrun.TempCollection.model.Commandlist" resultMap="commandlistMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM CommandList WHERE id=#{id}
+    </select>
+
+    <update id="update" parameterType="com.fastrun.TempCollection.model.Commandlist"
+            flushCache="true"
+            statementType="PREPARED"
+            timeout="20">
+        Update CommandList
+        <set>
+            <if test="model.name!=null">
+                `Name`=#{model.name},
+            </if>
+            <if test="model.code!=null">
+                `Code`=#{model.code},
+            </if>
+            <if test="model.note!=null">
+                `Note`=#{model.note},
+            </if>
+            <if test="model.deviceColumn!=null">
+                `DeviceColumn`=#{model.deviceColumn},
+            </if>
+            <if test="model.status!=null">
+                `Status`=#{model.status},
+            </if>
+        </set>
+        WHERE id=#{model.id}
+    </update>
+
+    <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
+            timeout="20">
+        update CommandList set state=-1 WHERE id=#{id}
+    </update>
+
+    <insert id="insert" parameterType="com.fastrun.TempCollection.model.Commandlist"
+            flushCache="true"
+            statementType="PREPARED"
+            keyProperty="id"
+            keyColumn=""
+            useGeneratedKeys="true"
+            timeout="20">
+        INSERT INTO CommandList(`Name`,`Code`,`Note`,`DeviceColumn`,`Status`) VALUES(#{model.name},#{model.code},#{model.note},#{model.deviceColumn},#{model.status})
+    </insert>
+
+
+    <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*) FROM CommandList
+        <!--where>
+            <if test="realName!=null and realName!=''">
+                 realName like concat('%',#{realName},'%')
+            </if>
+            and state!=-1
+        </where-->
+    </select>
+</mapper>

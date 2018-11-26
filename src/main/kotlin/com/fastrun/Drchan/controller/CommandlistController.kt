@@ -1,34 +1,33 @@
 package com.fastrun.TempCollection.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fastrun.TempCollection.ResponseData
+import com.fastrun.TempCollection.model.Commandlist
+import com.fastrun.TempCollection.service.CommandlistService
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
 import java.util.*
 import javax.annotation.Resource
-import com.fastrun.TempCollection.ResponseData
-import com.fastrun.TempCollection.model.Deviceinstallrecord
-import com.fastrun.TempCollection.service.DeviceinstallrecordService
-import org.springframework.web.bind.annotation.*
-import java.util.HashMap
 
-@RequestMapping("/admin/deviceinstallrecord/")
+@RequestMapping("/admin/commandlist/")
 @Controller
-class DeviceinstallrecordController {
+class CommandlistController {
     @Resource
-    var _service: DeviceinstallrecordService? = null
+    var _service: CommandlistService? = null
 
     @GetMapping("get")
     @ResponseBody
     fun get(@RequestParam id: Int): ResponseData {
         val re = ResponseData()
-        var result: Deviceinstallrecord? = _service?.get(id)
+        var result: Commandlist? = _service?.get(id)
         re.putDataValue("result", result)
         return re;
     }
 
     @PostMapping("create")
     @ResponseBody
-    fun create(@RequestBody model: Deviceinstallrecord): ResponseData {
+    fun create(@RequestBody model: Commandlist): ResponseData {
         val re = ResponseData()
         var result = _service?.insert(model)
         re.putDataValue("result", result)
@@ -37,7 +36,7 @@ class DeviceinstallrecordController {
 
     @PostMapping("update")
     @ResponseBody
-    fun update(@RequestBody model: Deviceinstallrecord): ResponseData {
+    fun update(@RequestBody model: Commandlist): ResponseData {
         val re = ResponseData()
         var result = _service?.update(model)
         re.putDataValue("result", result)
@@ -48,20 +47,23 @@ class DeviceinstallrecordController {
     @ResponseBody
     fun list(): ModelAndView {
         var m = ModelAndView()
-        m.viewName = "/admin/deviceinstallrecord/list"
+        m.viewName = "/admin/commandlist/list"
         return m;
     }
 
     @PostMapping("getPaging")
     @ResponseBody
-    fun getPaging(@RequestParam(name = "jtStartIndex", defaultValue = "0", required = true) offset: Int, @RequestParam(name = "jtPageSize") pageSize: Int, @RequestParam(name = "jtSorting", defaultValue = "id desc", required = false) orderBy: String): String {
-        var items = _service?.getPaging(offset, pageSize, orderBy)
+    fun getPaging(@RequestParam(name = "page", defaultValue = "1", required = true) offset: Int,
+                  @RequestParam(name = "pagesize", defaultValue = "20", required = true) pageSize: Int,
+                  @RequestParam(name = "sortname", defaultValue = "id", required = false) sortname: String,
+                  @RequestParam(name = "sortorder", defaultValue = "desc", required = false) sortorder: String): String {
+        var orderBy = "$sortname $sortorder"
+        var items = _service?.getPaging((offset - 1) * pageSize, pageSize, orderBy)
         var counts = _service?.getCount()
 
         val jsonMap = HashMap<String, Any>()
-        jsonMap["Result"] = "OK"
-        jsonMap["Records"] = items!!
-        jsonMap["TotalRecordCount"] = counts!!
+        jsonMap["Rows"] = items!!
+        jsonMap["Total"] = counts!!
         val mapper = ObjectMapper()
         var result = mapper.writeValueAsString(jsonMap)
         return result

@@ -31,8 +31,9 @@
                         <div class="form-group">
                             <select id="searchExecuteStatus" name="searchExecuteStatus" class="form-control">
                                 <option value="-1">--请选择执行状态--</option>
-                                <option value="1">已执行</option>
-                                <option value="0">未执行</option>
+                                <option value="2">已执行</option>
+                                <option value="1">已发送</option>
+                                <option value="0">待发送</option>
                             </select>　
                         </div>
                         <button id="search" type="button" class="btn btn-primary">

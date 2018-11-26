@@ -4,33 +4,46 @@
 <mapper namespace="com.fastrun.TempCollection.dal.DeviceMapper">
 
     <resultMap type="com.fastrun.TempCollection.model.Device" id="deviceMap">
-                  <id column="id" property="id" />
-         <result column="DeviceSN" property="deviceSN" />
-         <result column="DeviceType" property="deviceType" />
-         <result column="TypeName" property="typeName" />
-         <result column="Parameter1" property="parameter1" />
-         <result column="Parameter2" property="parameter2" />
-         <result column="interlave" property="interlave" />
-         <result column="FirmwareVersion" property="firmwareVersion" />
-         <result column="Status" property="status" />
-         <result column="CreaterID" property="createrID" />
-         <result column="CreateTime" property="createTime" />
+        <id column="id" property="id"/>
+        <result column="DeviceSN" property="deviceSN"/>
+        <result column="DeviceType" property="deviceType"/>
+        <result column="TypeName" property="typeName"/>
+        <result column="Parameter1" property="parameter1"/>
+        <result column="Parameter2" property="parameter2"/>
+        <result column="interlave" property="interlave"/>
+        <result column="FirmwareVersion" property="firmwareVersion"/>
+        <result column="Status" property="status"/>
+        <result column="CreaterID" property="createrID"/>
+        <result column="CreateTime" property="createTime"/>
+        <result column="Temp1" property="temp1"/>
+        <result column="Temp2" property="temp2"/>
+        <result column="Level" property="level"/>
+        <result column="CollectTime" property="collectTime"/>
     </resultMap>
-    
+
     <sql id="Base_Column_List">
-      `id`,`DeviceSN`,`DeviceType`,`TypeName`,`Parameter1`,`Parameter2`,`interlave`,`FirmwareVersion`,`Status`,`CreaterID`,`CreateTime`
+        `id`,`DeviceSN`,`DeviceType`,`TypeName`,`Parameter1`,`Parameter2`,`interlave`,`FirmwareVersion`,`Status`,`CreaterID`,`CreateTime`,`Temp1`,`Temp2`,`Level`,`CollectTime`,`EquipmentChipID`,`CommunicationCard`,`EquipmentPhone`,`Remark`,`UpdateTime`,`DeviceInitialTemp`
     </sql>
-  
+
     <select id="getPaging" resultType="com.fastrun.TempCollection.model.Device" resultMap="deviceMap">
-       SELECT
-        <include refid="Base_Column_List" />
-       FROM Device
-       order by ${orderBy} limit #{offset},#{pageSize}
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM Device WHERE `Status`!=3
+        <if test="deviceSN!=''">
+            and `DeviceSN` = #{deviceSN}
+        </if>
+        <if test="level1!=-1">
+            and `Level` &gt;= #{level1}
+        </if>
+        <if test="level2!=-1">
+            and `Level` &lt;= #{level2}
+        </if>
+        order by ${orderBy} limit #{offset},#{pageSize}
     </select>
 
     <select id="get" resultType="com.fastrun.TempCollection.model.Device" resultMap="deviceMap">
         SELECT
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         FROM Device WHERE id=#{id}
     </select>
 
@@ -38,65 +51,77 @@
             flushCache="true"
             statementType="PREPARED"
             timeout="20">
-       Update Device
+        Update Device
         <set>
-                   <if test="model.deviceSN!=null">
-                           `DeviceSN`=#{model.deviceSN},
-                       </if>
-        <if test="model.deviceType!=null">
-                           `DeviceType`=#{model.deviceType},
-                       </if>
-        <if test="model.typeName!=null">
-                           `TypeName`=#{model.typeName},
-                       </if>
-        <if test="model.parameter1!=null">
-                           `Parameter1`=#{model.parameter1},
-                       </if>
-        <if test="model.parameter2!=null">
-                           `Parameter2`=#{model.parameter2},
-                       </if>
-        <if test="model.interlave!=null">
-                           `interlave`=#{model.interlave},
-                       </if>
-        <if test="model.firmwareVersion!=null">
-                           `FirmwareVersion`=#{model.firmwareVersion},
-                       </if>
-        <if test="model.status!=null">
-                           `Status`=#{model.status},
-                       </if>
-        <if test="model.createrID!=null">
-                           `CreaterID`=#{model.createrID},
-                       </if>
-        <if test="model.createTime!=null">
-                           `CreateTime`=#{model.createTime},
-                       </if>  
+            <if test="model.deviceSN!=null">
+                `DeviceSN`=#{model.deviceSN},
+            </if>
+            <if test="model.deviceType!=null">
+                `DeviceType`=#{model.deviceType},
+            </if>
+            <if test="model.typeName!=null">
+                `TypeName`=#{model.typeName},
+            </if>
+            <if test="model.parameter1!=null">
+                `Parameter1`=#{model.parameter1},
+            </if>
+            <if test="model.parameter2!=null">
+                `Parameter2`=#{model.parameter2},
+            </if>
+            <if test="model.interlave!=null">
+                `interlave`=#{model.interlave},
+            </if>
+            <if test="model.firmwareVersion!=null">
+                `FirmwareVersion`=#{model.firmwareVersion},
+            </if>
+            <if test="model.status!=null">
+                `Status`=#{model.status},
+            </if>
+            <if test="model.createrID!=null">
+                `CreaterID`=#{model.createrID},
+            </if>
+            <if test="model.equipmentChipID!=null">
+                `EquipmentChipID`=#{model.equipmentChipID},
+            </if>
+            <if test="model.communicationCard!=null">
+                `CommunicationCard`=#{model.communicationCard},
+            </if>
+            <if test="model.equipmentPhone!=null">
+                `EquipmentPhone`=#{model.equipmentPhone},
+            </if>
+            <if test="model.remark!=null">
+                `Remark`=#{model.remark},
+            </if>
+            <if test="model.updateTime!=null">
+                `UpdateTime`=#{model.updateTime},
+            </if>
         </set>
         WHERE id=#{model.id}
     </update>
 
     <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
             timeout="20">
-        update Device set state=-1 WHERE id=#{id}
+        update Device set Status=3 WHERE id=#{id}
     </update>
 
     <insert id="insert" parameterType="com.fastrun.TempCollection.model.Device"
             flushCache="true"
             statementType="PREPARED"
-            keyProperty="id"
+            keyProperty="model.id"
             keyColumn=""
             useGeneratedKeys="true"
             timeout="20">
-        INSERT INTO Device(`DeviceSN`,`DeviceType`,`TypeName`,`Parameter1`,`Parameter2`,`interlave`,`FirmwareVersion`,`Status`,`CreaterID`,`CreateTime`) VALUES(#{model.deviceSN},#{model.deviceType},#{model.typeName},#{model.parameter1},#{model.parameter2},#{model.interlave},#{model.firmwareVersion},#{model.status},#{model.createrID},#{model.createTime})
+        INSERT INTO Device(`DeviceSN`,`DeviceType`,`TypeName`,`Parameter1`,`Parameter2`,`interlave`,`FirmwareVersion`,`Status`,`CreaterID`,`CreateTime`,`EquipmentChipID`,`CommunicationCard`,`EquipmentPhone`,`Remark`) VALUES(#{model.deviceSN},#{model.deviceType},#{model.typeName},#{model.parameter1},#{model.parameter2},#{model.interlave},#{model.firmwareVersion},#{model.status},#{model.createrID},#{model.createTime},#{model.equipmentChipID},#{model.communicationCard},#{model.equipmentPhone},#{model.remark})
     </insert>
 
 
     <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
-        SELECT count(*) FROM Device
-        <!--where>
-            <if test="realName!=null and realName!=''">
-                 realName like concat('%',#{realName},'%')
-            </if>
-            and state!=-1
-        </where-->
+        SELECT count(*) FROM Device WHERE `Status`!=3
+    </select>
+
+    <select id="getBySN" resultType="com.fastrun.TempCollection.model.Device" resultMap="deviceMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM Device WHERE `DeviceSN`=#{deviceSN}
     </select>
 </mapper>

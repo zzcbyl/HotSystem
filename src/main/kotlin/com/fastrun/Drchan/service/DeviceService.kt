@@ -2,6 +2,7 @@ package com.fastrun.TempCollection.service
 
 import com.fastrun.TempCollection.model.Device
 
+
 interface DeviceService {
 
     fun insert(model: Device): Int?
@@ -15,7 +16,7 @@ interface DeviceService {
     /*
     * 获取记录数
     * */
-    fun getCount(): Int?
+    fun getCount(deviceSN: String,level1: Float, level2: Float): Int?
 
     /*
     * 分页函数
@@ -25,6 +26,7 @@ interface DeviceService {
     * pageSize：页容量
     * orderBy：排序条件
     * */
-    fun getPaging(offset: Int, pageSize: Int, orderBy: String): List<Device>?
+    fun getPaging(deviceSN: String, level1: Float, level2: Float,offset: Int, pageSize: Int, orderBy: String): List<Device>?
 
+    fun getBySN(deviceSN: String): Device?
 }

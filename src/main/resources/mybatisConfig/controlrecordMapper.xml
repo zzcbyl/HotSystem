@@ -4,29 +4,34 @@
 <mapper namespace="com.fastrun.TempCollection.dal.ControlrecordMapper">
 
     <resultMap type="com.fastrun.TempCollection.model.Controlrecord" id="controlrecordMap">
-                  <id column="id" property="id" />
-         <result column="DeviceID" property="deviceID" />
-         <result column="ControlID" property="controlID" />
-         <result column="RemoteCode" property="remoteCode" />
-         <result column="Note" property="note" />
-         <result column="SendTime" property="sendTime" />
-         <result column="ReturnStatus" property="returnStatus" />
+        <id column="id" property="id"/>
+        <result column="DeviceID" property="deviceID"/>
+        <result column="ControlID" property="controlID"/>
+        <result column="RemoteCode" property="remoteCode"/>
+        <result column="Note" property="note"/>
+        <result column="SendTime" property="sendTime"/>
+        <result column="ReturnStatus" property="returnStatus"/>
+        <result column="ExecuteStatus" property="executeStatus"/>
+        <result column="DeviceSN" property="deviceSN"/>
     </resultMap>
-    
+
     <sql id="Base_Column_List">
-      `id`,`DeviceID`,`ControlID`,`RemoteCode`,`Note`,`SendTime`,`ReturnStatus`
+        `id`,`DeviceID`,`ControlID`,`RemoteCode`,`Note`,`SendTime`,`ReturnStatus`,`ExecuteStatus`,`DeviceSN`
     </sql>
-  
+
     <select id="getPaging" resultType="com.fastrun.TempCollection.model.Controlrecord" resultMap="controlrecordMap">
-       SELECT
-        <include refid="Base_Column_List" />
-       FROM ControlRecord
-       order by ${orderBy} limit #{offset},#{pageSize}
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM ControlRecord WHERE 1=1
+        <if test="controlID!=-1">
+            and `ControlID` = #{controlID}
+        </if>
+        order by ${orderBy} limit #{offset},#{pageSize}
     </select>
 
     <select id="get" resultType="com.fastrun.TempCollection.model.Controlrecord" resultMap="controlrecordMap">
         SELECT
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         FROM ControlRecord WHERE id=#{id}
     </select>
 
@@ -34,26 +39,32 @@
             flushCache="true"
             statementType="PREPARED"
             timeout="20">
-       Update ControlRecord
+        Update ControlRecord
         <set>
-                   <if test="model.deviceID!=null">
-                           `DeviceID`=#{model.deviceID},
-                       </if>
-        <if test="model.controlID!=null">
-                           `ControlID`=#{model.controlID},
-                       </if>
-        <if test="model.remoteCode!=null">
-                           `RemoteCode`=#{model.remoteCode},
-                       </if>
-        <if test="model.note!=null">
-                           `Note`=#{model.note},
-                       </if>
-        <if test="model.sendTime!=null">
-                           `SendTime`=#{model.sendTime},
-                       </if>
-        <if test="model.returnStatus!=null">
-                           `ReturnStatus`=#{model.returnStatus},
-                       </if>  
+            <if test="model.deviceID!=null">
+                `DeviceID`=#{model.deviceID},
+            </if>
+            <if test="model.controlID!=null">
+                `ControlID`=#{model.controlID},
+            </if>
+            <if test="model.remoteCode!=null">
+                `RemoteCode`=#{model.remoteCode},
+            </if>
+            <if test="model.note!=null">
+                `Note`=#{model.note},
+            </if>
+            <if test="model.sendTime!=null">
+                `SendTime`=#{model.sendTime},
+            </if>
+            <if test="model.returnStatus!=null">
+                `ReturnStatus`=#{model.returnStatus},
+            </if>
+            <if test="model.executeStatus!=null">
+                `ExecuteStatus`=#{model.executeStatus},
+            </if>
+            <if test="model.deviceSN!=null">
+                `DeviceSN`=#{model.deviceSN}
+            </if>
         </set>
         WHERE id=#{model.id}
     </update>
@@ -63,6 +74,11 @@
         update ControlRecord set state=-1 WHERE id=#{id}
     </update>
 
+    <update id="deleteByControlID" parameterType="java.lang.Integer" statementType="PREPARED"
+            timeout="20">
+        DELETE FROM ControlRecord WHERE `ControlID`=#{controlID} AND `ExecuteStatus`=0
+    </update>
+
     <insert id="insert" parameterType="com.fastrun.TempCollection.model.Controlrecord"
             flushCache="true"
             statementType="PREPARED"
@@ -70,17 +86,14 @@
             keyColumn=""
             useGeneratedKeys="true"
             timeout="20">
-        INSERT INTO ControlRecord(`DeviceID`,`ControlID`,`RemoteCode`,`Note`,`SendTime`,`ReturnStatus`) VALUES(#{model.deviceID},#{model.controlID},#{model.remoteCode},#{model.note},#{model.sendTime},#{model.returnStatus})
+        INSERT INTO ControlRecord(`DeviceID`,`ControlID`,`RemoteCode`,`Note`,`SendTime`,`ReturnStatus`,`ExecuteStatus`,`DeviceSN`) VALUES(#{model.deviceID},#{model.controlID},#{model.remoteCode},#{model.note},#{model.sendTime},#{model.returnStatus},#{model.executeStatus},#{model.deviceSN})
     </insert>
 
 
-    <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
-        SELECT count(*) FROM ControlRecord
-        <!--where>
-            <if test="realName!=null and realName!=''">
-                 realName like concat('%',#{realName},'%')
-            </if>
-            and state!=-1
-        </where-->
+    <select id="getCount" resultType="java.lang.Integer">
+        SELECT count(*) FROM ControlRecord WHERE 1=1
+        <if test="controlID!=-1">
+            and `ControlID` = #{controlID}
+        </if>
     </select>
 </mapper>

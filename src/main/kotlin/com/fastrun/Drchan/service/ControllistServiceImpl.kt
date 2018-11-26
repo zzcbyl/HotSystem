@@ -28,13 +28,13 @@ class ControllistServiceImpl : ControllistService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    override fun getPaging(offset: Int, pageSize: Int, orderBy: String): List<Controllist>? {
-        return controllistRepository?.getPaging(offset, pageSize, orderBy)
+    override fun getPaging(remoteCode: String, executeStatus: Int, offset: Int, pageSize: Int, orderBy: String): List<Controllist>? {
+        return controllistRepository?.getPaging(remoteCode, executeStatus, offset, pageSize, orderBy)
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
-    override fun getCount(): Int? {
-        return controllistRepository?.getCount()
+    override fun getCount(remoteCode: String, executeStatus: Int): Int? {
+        return controllistRepository?.getCount(remoteCode, executeStatus)
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

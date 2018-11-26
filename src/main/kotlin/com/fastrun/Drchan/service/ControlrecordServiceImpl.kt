@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import javax.annotation.Resource
 
+
 @Service
 class ControlrecordServiceImpl : ControlrecordService {
     @Resource
@@ -28,13 +29,13 @@ class ControlrecordServiceImpl : ControlrecordService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    override fun getPaging(offset: Int, pageSize: Int, orderBy: String): List<Controlrecord>? {
-        return controlrecordRepository?.getPaging(offset, pageSize, orderBy)
+    override fun getPaging(controlID: Int, offset: Int, pageSize: Int, orderBy: String): List<Controlrecord>? {
+        return controlrecordRepository?.getPaging(controlID, offset, pageSize, orderBy)
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
-    override fun getCount(): Int? {
-        return controlrecordRepository?.getCount()
+    override fun getCount(controlID: Int): Int? {
+        return controlrecordRepository?.getCount(controlID)
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -42,5 +43,9 @@ class ControlrecordServiceImpl : ControlrecordService {
         return controlrecordRepository?.delete(id)
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    override fun deleteByControlID(controlID: Int): Int? {
+        return controlrecordRepository?.deleteByControlID(controlID)
+    }
 }
 

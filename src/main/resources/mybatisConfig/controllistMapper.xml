@@ -1,32 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.fastrun.TempCollection.dal.ControllistMapper">
 
     <resultMap type="com.fastrun.TempCollection.model.Controllist" id="controllistMap">
-                  <id column="id" property="id" />
-         <result column="RangeType" property="rangeType" />
-         <result column="RangeObjectID" property="rangeObjectID" />
-         <result column="RemoteCode" property="remoteCode" />
-         <result column="Note" property="note" />
-         <result column="Status" property="status" />
-         <result column="CreateTime" property="createTime" />
+        <id column="id" property="id"/>
+        <result column="RangeType" property="rangeType"/>
+        <result column="RangeObjectID" property="rangeObjectID"/>
+        <result column="RemoteCode" property="remoteCode"/>
+        <result column="Note" property="note"/>
+        <result column="Status" property="status"/>
+        <result column="CreateTime" property="createTime"/>
+        <result column="ExecuteStatus" property="executeStatus"/>
+        <result column="Name" property="name"/>
+        <result column="DeviceColumn" property="deviceColumn"/>
     </resultMap>
-    
+
     <sql id="Base_Column_List">
-      `id`,`RangeType`,`RangeObjectID`,`RemoteCode`,`Note`,`Status`,`CreateTime`
+        `id`,`RangeType`,`RangeObjectID`,`RemoteCode`,`Note`,`Status`,`CreateTime`,`ExecuteStatus`,`Name`,`DeviceColumn`
     </sql>
-  
+
     <select id="getPaging" resultType="com.fastrun.TempCollection.model.Controllist" resultMap="controllistMap">
-       SELECT
-        <include refid="Base_Column_List" />
-       FROM ControlList
-       order by ${orderBy} limit #{offset},#{pageSize}
+        SELECT
+        cl.`id`,cl.`RangeType`,cl.`RangeObjectID`,cl.`RemoteCode`,cl.`Note`,cl.`Status`,cl.`CreateTime`,cl.`ExecuteStatus`,cl.`Name`,cl.`DeviceColumn`,
+        d.`DeviceSN` AS deviceSN, c.`Name` AS communityName, hes.`Name` AS stationName
+        FROM ControlList cl LEFT JOIN Device d ON cl.RangeType=1 AND cl.RangeObjectID=d.id
+        LEFT JOIN Community c ON cl.RangeType=2 AND cl.RangeObjectID=c.id
+        LEFT JOIN HeatExchangeStation hes ON cl.RangeType=3 AND cl.RangeObjectID=hes.id
+        WHERE 1=1
+        <if test="remoteCode!='-1'">
+            AND cl.`RemoteCode` = #{remoteCode}
+        </if>
+        <if test="executeStatus!=-1">
+            AND cl.`ExecuteStatus`=#{executeStatus}
+        </if>
+        order by ${orderBy} limit #{offset},#{pageSize}
     </select>
 
     <select id="get" resultType="com.fastrun.TempCollection.model.Controllist" resultMap="controllistMap">
         SELECT
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         FROM ControlList WHERE id=#{id}
     </select>
 
@@ -34,53 +48,65 @@
             flushCache="true"
             statementType="PREPARED"
             timeout="20">
-       Update ControlList
+        Update ControlList
         <set>
-                   <if test="model.rangeType!=null">
-                           `RangeType`=#{model.rangeType},
-                       </if>
-        <if test="model.rangeObjectID!=null">
-                           `RangeObjectID`=#{model.rangeObjectID},
-                       </if>
-        <if test="model.remoteCode!=null">
-                           `RemoteCode`=#{model.remoteCode},
-                       </if>
-        <if test="model.note!=null">
-                           `Note`=#{model.note},
-                       </if>
-        <if test="model.status!=null">
-                           `Status`=#{model.status},
-                       </if>
-        <if test="model.createTime!=null">
-                           `CreateTime`=#{model.createTime},
-                       </if>  
+            <if test="model.rangeType!=null">
+                `RangeType`=#{model.rangeType},
+            </if>
+            <if test="model.rangeObjectID!=null">
+                `RangeObjectID`=#{model.rangeObjectID},
+            </if>
+            <if test="model.remoteCode!=null">
+                `RemoteCode`=#{model.remoteCode},
+            </if>
+            <if test="model.note!=null">
+                `Note`=#{model.note},
+            </if>
+            <if test="model.status!=null">
+                `Status`=#{model.status},
+            </if>
+            <if test="model.createTime!=null">
+                `CreateTime`=#{model.createTime},
+            </if>
+            <if test="model.executeStatus!=null">
+                `ExecuteStatus`=#{model.executeStatus},
+            </if>
+            <if test="model.name!=null">
+                `Name`=#{model.name},
+            </if>
+            <if test="model.deviceColumn!=null">
+                `DeviceColumn`=#{model.deviceColumn}
+            </if>
         </set>
         WHERE id=#{model.id}
     </update>
 
     <update id="delete" parameterType="java.lang.Integer" statementType="PREPARED"
             timeout="20">
-        update ControlList set state=-1 WHERE id=#{id}
+        update ControlList set `Status`=3 WHERE id=#{id}
     </update>
 
     <insert id="insert" parameterType="com.fastrun.TempCollection.model.Controllist"
             flushCache="true"
             statementType="PREPARED"
-            keyProperty="id"
+            keyProperty="model.id"
             keyColumn=""
             useGeneratedKeys="true"
             timeout="20">
-        INSERT INTO ControlList(`RangeType`,`RangeObjectID`,`RemoteCode`,`Note`,`Status`,`CreateTime`) VALUES(#{model.rangeType},#{model.rangeObjectID},#{model.remoteCode},#{model.note},#{model.status},#{model.createTime})
+        INSERT INTO ControlList(`RangeType`,`RangeObjectID`,`RemoteCode`,`Note`,`Status`,`CreateTime`,`ExecuteStatus`,`Name`,`DeviceColumn`) VALUES(#{model.rangeType},#{model.rangeObjectID},#{model.remoteCode},#{model.note},#{model.status},#{model.createTime},#{model.executeStatus},#{model.name},#{model.deviceColumn})
+        <!--<selectKey resultType="int" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>-->
     </insert>
 
 
     <select id="getCount" parameterType="java.lang.String" resultType="java.lang.Integer">
-        SELECT count(*) FROM ControlList
-        <!--where>
-            <if test="realName!=null and realName!=''">
-                 realName like concat('%',#{realName},'%')
-            </if>
-            and state!=-1
-        </where-->
+        SELECT count(*) FROM ControlList WHERE `Status`!=3
+        <if test="remoteCode!='-1'">
+            AND `RemoteCode` = #{remoteCode}
+        </if>
+        <if test="executeStatus!=-1">
+            AND `ExecuteStatus`=#{executeStatus}
+        </if>
     </select>
 </mapper>

@@ -3,7 +3,6 @@ package com.fastrun.TempCollection.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fastrun.Drchan.common.MD5Encrpyt
 import com.fastrun.TempCollection.ResponseData
-import com.fastrun.TempCollection.common.AESEncoder
 import com.fastrun.TempCollection.model.Employee
 import com.fastrun.TempCollection.service.EmployeeService
 import org.springframework.stereotype.Controller
@@ -38,7 +37,7 @@ class EmployeeController {
             re.putDataValue("message", "账号已存在")
             return re
         }
-        model.password = AESEncoder.AESEncode(AESEncoder.salt, model.password).toString();
+        model.password = MD5Encrpyt.MD5Encode(model.password).toString();
         var result = employService?.insert(model)
         re.putDataValue("result", result)
         return re;
@@ -108,7 +107,7 @@ class EmployeeController {
     //fun resetPassword(@RequestParam(required = true) id: Int, @RequestParam(required = true) password: String): ResponseData {
     fun resetPassword(@RequestBody model: Employee): ResponseData {
         val re = ResponseData()
-        var newPassword = AESEncoder.AESEncode(AESEncoder.salt, model.password).toString();
+        var newPassword = MD5Encrpyt.MD5Encode(model.password).toString();
         var result = employService?.resetPassword(model.id, newPassword)
         re.putDataValue("result", result)
         return re;
